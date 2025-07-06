@@ -854,7 +854,12 @@ export const TableDoc = ({ data, onFetchData }) => {
             variant="outlined"
             disabled={currentPage === 1 || isLoading || isLoading}
             onClick={handlePrevPage}
-            className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            className="py-2 px-3 text-xs"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Prev
           </Button>
@@ -884,7 +889,12 @@ export const TableDoc = ({ data, onFetchData }) => {
             variant="outlined"
             disabled={currentPage === totalPages || isLoading}
             onClick={handleNextPage}
-            className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            className="py-2 px-3 text-xs"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Next
           </Button>

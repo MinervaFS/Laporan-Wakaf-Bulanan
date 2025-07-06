@@ -1,70 +1,44 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { BiSend, BiX, BiLoader } from "react-icons/bi";
 import { toast } from "react-toastify";
-import { BtnCreateDoc } from "./Button";
 import { Button } from "@material-tailwind/react";
+import { BtnDeleteRisk } from "./Button";
+import { BiTrash, BiLoader } from "react-icons/bi";
 
-export const ModalCreateDoc = ({ checkFetchData }) => {
+export const ModalDeleteRisk = ({ id, checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    documentType: "",
-  });
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleModalCreateOpen = () => {
+  const handleModalDeleteOpen = () => {
     setIsModalOpen(true);
   };
 
-  const handleModalCreateClose = () => {
+  const handleModalDeleteClose = () => {
     if (!isLoading) {
       setIsModalOpen(false);
-      setFormData({ documentType: "" });
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validasi input
-    if (!formData.documentType.trim()) {
-      toast.error("Jenis dokumen tidak boleh kosong");
-      return;
-    }
-
+  const handleSubmit = async () => {
     setIsLoading(true);
-
     try {
-      const res = await fetch("/api/master-data/new-document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        credentials: "include",
+      const res = await fetch(`/api/master-data/new-document?id=${id}`, {
+        method: "DELETE",
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Gagal menyimpan data");
+      if (!res.ok) {
+        throw new Error("Gagal menghapus data");
+      }
 
-      toast.success("Data berhasil disimpan!");
-      handleModalCreateClose();
+      toast.success("Data berhasil dihapus!");
 
       if (checkFetchData && typeof checkFetchData === "function") {
         checkFetchData();
       }
+      handleModalDeleteClose();
     } catch (error) {
-      console.error("SUBMIT ERROR:", error);
-      toast.error(error.message || "Terjadi kesalahan saat menyimpan");
+      console.error("DELETE ERROR:", error);
+      toast.error(error.message || "Terjadi kesalahan saat menghapus");
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +47,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
   // Handle click outside modal
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget && !isLoading) {
-      handleModalCreateClose();
+      handleModalDeleteClose();
     }
   };
 
@@ -81,7 +55,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape" && isModalOpen && !isLoading) {
-        handleModalCreateClose();
+        handleModalDeleteClose();
       }
     };
 
@@ -98,7 +72,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
 
   return (
     <div>
-      <BtnCreateDoc onOpen={handleModalCreateOpen} />
+      <BtnDeleteRisk openModalDelete={handleModalDeleteOpen} />
 
       {/* Modal Overlay */}
       {isModalOpen && (
@@ -111,21 +85,21 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
         >
           {/* Modal Content */}
           <div
+            className=" rounded-xl shadow-2xl w-full max-w-md"
             style={{
               backgroundColor: "var(--modal-bg)",
               border: "3px solid var(--modal-border)",
             }}
-            className=" rounded-xl shadow-2xl w-full max-w-md"
           >
             {/* Modal Header */}
             <div
+              className="flex items-center justify-between p-6 border-b border-gray-100"
               style={{
                 borderBottom: "1px solid var(--modal-border-bottom)",
               }}
-              className="flex items-center justify-between p-6 "
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-600 rounded-full">
+                <div className="p-2 bg-red-600 rounded-full">
                   <svg
                     className="h-5 w-5 text-white"
                     fill="none"
@@ -136,72 +110,69 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
                 </div>
                 <h2
                   id="modal-title"
-                  className="text-xl font-semibold text-gray-800 flex items-center gap-2"
                   style={{
                     color: "var(--modal-text-color)",
                   }}
+                  className="text-xl font-semibold  flex items-center gap-2"
                 >
-                  Buat Dokumen Baru
+                  Hapus Jenis Resiko?
                 </h2>
-              </div>{" "}
-              <button
+              </div>
+              {/* <button
                 type="button"
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleModalCreateClose}
+                onClick={handleModalDeleteClose}
                 disabled={isLoading}
                 aria-label="Tutup modal"
               >
                 <BiX size={24} className="text-gray-500" />
-              </button>
+              </button> */}
             </div>
 
             {/* Modal Body */}
             <div className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Form Field */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="documentType"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    <span
-                      style={{
-                        color: "var(--modal-text-color)",
-                      }}
-                      className="inline-flex items-center gap-1 mb-2"
+              <div className="space-y-6">
+                {/* Warning Message */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-red-100 rounded-full flex-shrink-0">
+                    <svg
+                      className="h-5 w-5 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                        className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                      >
-                        1
-                      </span>
-                      Dokumen Baru
-                    </span>
-                  </label>
-
-                  <div className="relative">
-                    <input
-                      id="documentType"
-                      type="text"
-                      name="documentType"
-                      placeholder="Masukan Jenis Asset"
-                      value={formData.documentType}
-                      onChange={handleOnChange}
-                      disabled={isLoading}
-                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.732 15c-.77.833.192 2.5 1.732 2.5z"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3
+                      className="text-lg font-medium  mb-2"
                       style={{
                         color: "var(--modal-text-color)",
                       }}
-                    />
+                    >
+                      Konfirmasi Penghapusan
+                    </h3>
+                    <p
+                      className="text-sm"
+                      style={{
+                        color: "var(--modal-text-color)",
+                      }}
+                    >
+                      Apakah Anda yakin ingin menghapus jenis resiko ini? Data
+                      yang sudah dihapus tidak dapat dikembalikan.
+                    </p>
                   </div>
                 </div>
 
@@ -211,7 +182,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                     type="button"
                     variant="outlined"
                     color="gray"
-                    onClick={handleModalCreateClose}
+                    onClick={handleModalDeleteClose}
                     disabled={isLoading}
                     className="px-6 py-2.5 border-gray-300 hover:bg-[var(--modal-btn-hover)] transition-colors duration-200"
                     style={{
@@ -222,24 +193,25 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                   </Button>
 
                   <Button
-                    type="submit"
-                    className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
-                    disabled={isLoading || !formData.documentType.trim()}
+                    type="button"
+                    onClick={handleSubmit}
+                    className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
+                    disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
                         <BiLoader className="animate-spin" size={18} />
-                        <span>Menyimpan...</span>
+                        <span>Menghapus...</span>
                       </>
                     ) : (
                       <>
-                        <BiSend size={18} />
-                        <span>Simpan</span>
+                        <BiTrash size={18} />
+                        <span>Hapus</span>
                       </>
                     )}
                   </Button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>

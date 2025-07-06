@@ -2,7 +2,7 @@
 import { BiPlus, BiSolidEditAlt, BiSolidTrash, BiTrash } from "react-icons/bi";
 import { Button } from "@material-tailwind/react";
 
-export const BtnCreateDoc = ({ onOpen }) => {
+export const BtnCreateAsset = ({ onOpen }) => {
   return (
     <div>
       <Button
@@ -18,19 +18,19 @@ export const BtnCreateDoc = ({ onOpen }) => {
   );
 };
 
-export const BtnEditDoc = ({ openModalEdit }) => {
+export const BtnEditAsset = ({ openModalEdit }) => {
   return (
     <div>
       <Button
         onClick={openModalEdit}
-        className="text-white bg-teal-500 hover:bg-teal-400 hover:shadow-teal-400 hover:shadow-lg duration-200 p-2 rounded-full text-md"
+        className="text-white bg-blue-500 hover:bg-blue-400 hover:shadow-blue-400 hover:shadow-lg duration-200 p-2 rounded-full text-md"
       >
         <BiSolidEditAlt size={20} />
       </Button>
     </div>
   );
 };
-export const BtnDeleteDoc = ({ openModalDelete }) => {
+export const BtnDeleteAsset = ({ openModalDelete }) => {
   return (
     <div>
       <Button

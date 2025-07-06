@@ -1,17 +1,35 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { BiSend, BiX, BiLoader } from "react-icons/bi";
 import { toast } from "react-toastify";
-import { BtnCreateDoc } from "./Button";
 import { Button } from "@material-tailwind/react";
+import { BtnEditRisk } from "./Button";
+import { BiSend, BiLoader } from "react-icons/bi";
 
-export const ModalCreateDoc = ({ checkFetchData }) => {
+export const ModalEditRisk = ({ item, checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    documentType: "",
+    documentType: item?.documentType || "",
   });
+
+  useEffect(() => {
+    if (item) {
+      setFormData({
+        documentType: item.documentType || "",
+      });
+    }
+  }, [item]);
+
+  const handleModalEditOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalEditClose = () => {
+    if (!isLoading) {
+      setIsModalOpen(false);
+      setIsLoading(false);
+    }
+  };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -19,17 +37,6 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleModalCreateOpen = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleModalCreateClose = () => {
-    if (!isLoading) {
-      setIsModalOpen(false);
-      setFormData({ documentType: "" });
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -44,26 +51,26 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/master-data/new-document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        credentials: "include",
+      const res = await fetch(`/api/master-data/new-document/${item._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newDocumentType: formData }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Gagal menyimpan data");
+      const responseData = await res.json();
 
-      toast.success("Data berhasil disimpan!");
-      handleModalCreateClose();
+      if (!res.ok) {
+        throw new Error(responseData.message || "Gagal mengupdate data");
+      }
+
+      toast.success("Data dokumen baru berhasil diperbarui");
 
       if (checkFetchData && typeof checkFetchData === "function") {
-        checkFetchData();
+        await checkFetchData();
       }
+      handleModalEditClose();
     } catch (error) {
-      console.error("SUBMIT ERROR:", error);
+      console.error("Update error:", error);
       toast.error(error.message || "Terjadi kesalahan saat menyimpan");
     } finally {
       setIsLoading(false);
@@ -73,7 +80,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
   // Handle click outside modal
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget && !isLoading) {
-      handleModalCreateClose();
+      handleModalEditClose();
     }
   };
 
@@ -81,7 +88,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape" && isModalOpen && !isLoading) {
-        handleModalCreateClose();
+        handleModalEditClose();
       }
     };
 
@@ -98,7 +105,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
 
   return (
     <div>
-      <BtnCreateDoc onOpen={handleModalCreateOpen} />
+      <BtnEditRisk openModalEdit={handleModalEditOpen} />
 
       {/* Modal Overlay */}
       {isModalOpen && (
@@ -119,13 +126,13 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
           >
             {/* Modal Header */}
             <div
+              className="flex items-center justify-between p-6 border-b border-gray-100"
               style={{
                 borderBottom: "1px solid var(--modal-border-bottom)",
               }}
-              className="flex items-center justify-between p-6 "
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-600 rounded-full">
+                <div className="p-2 bg-blue-600 rounded-full">
                   <svg
                     className="h-5 w-5 text-white"
                     fill="none"
@@ -136,29 +143,29 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                     />
                   </svg>
                 </div>
                 <h2
                   id="modal-title"
-                  className="text-xl font-semibold text-gray-800 flex items-center gap-2"
                   style={{
                     color: "var(--modal-text-color)",
                   }}
+                  className="text-xl font-semibold  flex items-center gap-2"
                 >
-                  Buat Dokumen Baru
+                  Edit Jenis Resiko
                 </h2>
-              </div>{" "}
-              <button
+              </div>
+              {/* <button
                 type="button"
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleModalCreateClose}
+                onClick={handleModalEditClose}
                 disabled={isLoading}
                 aria-label="Tutup modal"
               >
                 <BiX size={24} className="text-gray-500" />
-              </button>
+              </button> */}
             </div>
 
             {/* Modal Body */}
@@ -168,7 +175,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                 <div className="space-y-2">
                   <label
                     htmlFor="documentType"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium "
                   >
                     <span
                       style={{
@@ -184,7 +191,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                       >
                         1
                       </span>
-                      Dokumen Baru
+                      Jenis Dokumen
                     </span>
                   </label>
 
@@ -193,11 +200,11 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                       id="documentType"
                       type="text"
                       name="documentType"
-                      placeholder="Masukan Jenis Asset"
+                      placeholder="Masukan Jenis Dokumen"
                       value={formData.documentType}
                       onChange={handleOnChange}
                       disabled={isLoading}
-                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500  bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                       style={{
                         color: "var(--modal-text-color)",
                       }}
@@ -211,7 +218,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                     type="button"
                     variant="outlined"
                     color="gray"
-                    onClick={handleModalCreateClose}
+                    onClick={handleModalEditClose}
                     disabled={isLoading}
                     className="px-6 py-2.5 border-gray-300 hover:bg-[var(--modal-btn-hover)] transition-colors duration-200"
                     style={{
@@ -223,7 +230,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
 
                   <Button
                     type="submit"
-                    className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
+                    className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
                     disabled={isLoading || !formData.documentType.trim()}
                   >
                     {isLoading ? (

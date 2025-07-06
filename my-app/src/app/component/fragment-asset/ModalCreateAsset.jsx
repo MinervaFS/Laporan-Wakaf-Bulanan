@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { BiSend, BiX } from "react-icons/bi";
+import { useState, useEffect } from "react";
+import { BiSend, BiX, BiLoader } from "react-icons/bi";
 import { toast } from "react-toastify";
-import { BtnCreateAsset, BtnCreateDoc } from "./Button";
-import { Input } from "@material-tailwind/react";
+import { BtnCreateAsset } from "./Button";
+import { Button, Input } from "@material-tailwind/react";
 
-export const ModalCreateDoc = ({ checkFetchData }) => {
+export const ModalCreateAsset = ({ checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -26,12 +26,21 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
   };
 
   const handleModalCreateClose = () => {
-    setIsModalOpen(false);
-    setFormData({ documentType: "" });
+    if (!isLoading) {
+      setIsModalOpen(false);
+      setFormData({ documentType: "" });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi input
+    if (!formData.documentType.trim()) {
+      toast.error("Jenis dokumen tidak boleh kosong");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -49,66 +58,189 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
 
       toast.success("Data berhasil disimpan!");
       handleModalCreateClose();
-      checkFetchData();
+
+      if (checkFetchData && typeof checkFetchData === "function") {
+        checkFetchData();
+      }
     } catch (error) {
       console.error("SUBMIT ERROR:", error);
-      toast.error("Terjadi kesalahan saat menyimpan");
+      toast.error(error.message || "Terjadi kesalahan saat menyimpan");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Handle click outside modal
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget && !isLoading) {
+      handleModalCreateClose();
+    }
+  };
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isModalOpen && !isLoading) {
+        handleModalCreateClose();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalOpen, isLoading]);
+
   return (
     <div>
-      <BtnCreateDoc onOpen={handleModalCreateOpen} />
+      <BtnCreateAsset onOpen={handleModalCreateOpen} />
 
+      {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Buat Dokumen Baru</h2>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={handleBackdropClick}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          {/* Modal Content */}
+          <div
+            style={{
+              backgroundColor: "var(--modal-bg)",
+              border: "3px solid var(--modal-border)",
+            }}
+            className=" rounded-xl shadow-2xl w-full max-w-md"
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                borderBottom: "1px solid var(--modal-border-bottom)",
+              }}
+              className="flex items-center justify-between p-6 "
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-600 rounded-full">
+                  <svg
+                    className="h-5 w-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <h2
+                  id="modal-title"
+                  className="text-xl font-semibold text-gray-800 flex items-center gap-2"
+                  style={{
+                    color: "var(--modal-text-color)",
+                  }}
+                >
+                  Buat Jenis Asset
+                </h2>
+              </div>{" "}
               <button
                 type="button"
-                className="p-2 rounded-full hover:bg-gray-200"
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleModalCreateClose}
                 disabled={isLoading}
+                aria-label="Tutup modal"
               >
-                <BiX size={25} />
+                <BiX size={24} className="text-gray-500" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <span className="font-bold">1. </span>Jenis Pemanfaatan Asset
-                </label>
-                <Input
-                  type="text"
-                  name="documentType"
-                  label="Masukan Jenis Asset"
-                  value={formData.documentType}
-                  onChange={handleOnChange}
-                />
-              </div>
+            {/* Modal Body */}
+            <div className="p-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form Field */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="documentType"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    <span
+                      style={{
+                        color: "var(--modal-text-color)",
+                      }}
+                      className="inline-flex items-center gap-1 mb-2"
+                    >
+                      <span
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                        className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                      >
+                        1
+                      </span>
+                      Jenis Asset
+                    </span>
+                  </label>
 
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className={`p-3 rounded-full text-white font-semibold transition flex items-center justify-center ${
-                    isLoading
-                      ? "bg-blue-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
-                  ) : (
-                    <BiSend size={25} />
-                  )}
-                </button>
-              </div>
-            </form>
+                  <div className="relative">
+                    <input
+                      id="documentType"
+                      type="text"
+                      name="documentType"
+                      placeholder="Masukan Jenis Asset"
+                      value={formData.assetType}
+                      onChange={handleOnChange}
+                      disabled={isLoading}
+                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                      style={{
+                        color: "var(--modal-text-color)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    color="gray"
+                    onClick={handleModalCreateClose}
+                    disabled={isLoading}
+                    className="px-6 py-2.5 border-gray-300 hover:bg-[var(--modal-btn-hover)] transition-colors duration-200"
+                    style={{
+                      color: "var(--modal-text-color)",
+                    }}
+                  >
+                    Batal
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
+                    disabled={isLoading || !formData.documentType.trim()}
+                  >
+                    {isLoading ? (
+                      <>
+                        <BiLoader className="animate-spin" size={18} />
+                        <span>Menyimpan...</span>
+                      </>
+                    ) : (
+                      <>
+                        <BiSend size={18} />
+                        <span>Simpan</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

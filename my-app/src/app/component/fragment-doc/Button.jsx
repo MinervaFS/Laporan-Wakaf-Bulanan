@@ -23,13 +23,14 @@ export const BtnEditDoc = ({ openModalEdit }) => {
     <div>
       <Button
         onClick={openModalEdit}
-        className="text-white bg-teal-500 hover:bg-teal-400 hover:shadow-teal-400 hover:shadow-lg duration-200 p-2 rounded-full text-md"
+        className="text-white bg-blue-500 hover:bg-blue-400 hover:shadow-blue-400 hover:shadow-lg duration-200 p-2 rounded-full text-md"
       >
         <BiSolidEditAlt size={20} />
       </Button>
     </div>
   );
 };
+
 export const BtnDeleteDoc = ({ openModalDelete }) => {
   return (
     <div>

@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { BiSend, BiX, BiLoader } from "react-icons/bi";
 import { toast } from "react-toastify";
-import { BtnCreateDoc } from "./Button";
+import { BtnCreaterRisk } from "./Button";
 import { Button } from "@material-tailwind/react";
 
-export const ModalCreateDoc = ({ checkFetchData }) => {
+export const ModalCreateRisk = ({ checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -98,7 +98,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
 
   return (
     <div>
-      <BtnCreateDoc onOpen={handleModalCreateOpen} />
+      <BtnCreaterRisk onOpen={handleModalCreateOpen} />
 
       {/* Modal Overlay */}
       {isModalOpen && (
@@ -111,18 +111,18 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
         >
           {/* Modal Content */}
           <div
+            className=" rounded-xl shadow-2xl w-full max-w-md"
             style={{
               backgroundColor: "var(--modal-bg)",
               border: "3px solid var(--modal-border)",
             }}
-            className=" rounded-xl shadow-2xl w-full max-w-md"
           >
             {/* Modal Header */}
             <div
+              className="flex items-center justify-between p-6 border-b border-gray-100"
               style={{
                 borderBottom: "1px solid var(--modal-border-bottom)",
               }}
-              className="flex items-center justify-between p-6 "
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-amber-600 rounded-full">
@@ -142,12 +142,12 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                 </div>
                 <h2
                   id="modal-title"
-                  className="text-xl font-semibold text-gray-800 flex items-center gap-2"
+                  className="text-xl font-semibold  flex items-center gap-2"
                   style={{
                     color: "var(--modal-text-color)",
                   }}
                 >
-                  Buat Dokumen Baru
+                  Buat Jenis Resiko
                 </h2>
               </div>{" "}
               <button
@@ -171,20 +171,20 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                     className="block text-sm font-medium text-gray-700"
                   >
                     <span
+                      className="inline-flex items-center gap-1 mb-2"
                       style={{
                         color: "var(--modal-text-color)",
                       }}
-                      className="inline-flex items-center gap-1 mb-2"
                     >
                       <span
+                        className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
                         style={{
                           color: "var(--modal-text-color)",
                         }}
-                        className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
                       >
                         1
                       </span>
-                      Dokumen Baru
+                      Jenis Resik
                     </span>
                   </label>
 
@@ -197,7 +197,7 @@ export const ModalCreateDoc = ({ checkFetchData }) => {
                       value={formData.documentType}
                       onChange={handleOnChange}
                       disabled={isLoading}
-                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                      className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 text-gray-800 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
                       style={{
                         color: "var(--modal-text-color)",
                       }}

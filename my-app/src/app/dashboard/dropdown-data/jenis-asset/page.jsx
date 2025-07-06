@@ -1,4 +1,6 @@
 "use client";
+import { ModalDeleteAsset } from "@/app/component/fragment-asset/ModalDeleteAsset";
+import { ModalEditAsset } from "@/app/component/fragment-asset/ModalEditAsset";
 import { TableAsset } from "@/app/component/fragment-asset/TableAsset";
 import { TableDoc } from "@/app/component/fragment-doc/Tabledoc";
 import { useState, useEffect } from "react";
@@ -87,6 +89,8 @@ export default function Asset() {
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
         <TableAsset />
+        <ModalEditAsset />
+        <ModalDeleteAsset />
       </div>
     </div>
   );

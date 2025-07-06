@@ -1,4 +1,6 @@
 "use client";
+import { ModalDeleteDoc } from "@/app/component/fragment-doc/ModalDeleteDoc";
+import { ModalEditDoc } from "@/app/component/fragment-doc/ModalEditDoc";
 import { TableDoc } from "@/app/component/fragment-doc/Tabledoc";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
@@ -86,6 +88,8 @@ export default function Document() {
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
         <TableDoc />
+        <ModalEditDoc />
+        <ModalDeleteDoc />
       </div>
     </div>
   );

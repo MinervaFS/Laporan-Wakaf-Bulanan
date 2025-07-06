@@ -1,4 +1,5 @@
 "use client";
+import { TableDoc } from "@/app/component/fragment-doc/Tabledoc";
 import { TableDashboardAdmin } from "@/app/component/TableDashboardAdmin";
 import { useEffect, useState } from "react";
 
@@ -140,7 +141,8 @@ export default function DashboardAdmin() {
       </div> */}
       <div className="">
         {/* <TableDashboard data={data} totalReport={totalReport} /> */}
-        <TableDashboardAdmin />
+        {/* <TableDashboardAdmin /> */}
+        <TableDoc />
       </div>
     </div>
   );

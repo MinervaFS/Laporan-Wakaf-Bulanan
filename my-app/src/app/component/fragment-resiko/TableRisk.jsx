@@ -11,16 +11,20 @@ import {
 import { useState, useEffect } from "react";
 import { ItemsOptionDashboardAdmin } from "../ItemOptionTable";
 import { BiFilter, BiSolidFilterAlt, BiTrash } from "react-icons/bi";
-import { FaFilePdf, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaCalendarAlt,
+  FaFilePdf,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "react-toastify";
 import { SearchInput } from "../SearchInput";
-import { ModalDeleteDoc, ModalDeleteResiko } from "./ModalDeleteResiko";
-import { ModalCreateDoc, ModalCreateResiko } from "./ModalCreateResiko";
-import { ModalEditResiko } from "./ModalEditResiko";
+import { ModalEditRisk } from "./ModalEditRisk";
+import { ModalDeleteRisk } from "./ModalDeleteRisk";
+import { ModalCreateRisk } from "./ModalCreateRisk";
 
-export const TableResiko = ({ data, onFetchData }) => {
+export const TableRisk = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
@@ -372,7 +376,7 @@ export const TableResiko = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex justify-end">
-        <ModalCreateResiko checkFetchData={handleFetchData} />
+        <ModalCreateRisk checkFetchData={handleFetchData} />
       </div>
       <div className="flex flex-wrap md:flex-row md:justify-between items-center my-5 gap-3">
         <div className="flex gap-2">
@@ -746,7 +750,7 @@ export const TableResiko = ({ data, onFetchData }) => {
                 Tanggal Dibuat
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jenis Resiko
+                Jenis Dokumen
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Action
@@ -799,11 +803,8 @@ export const TableResiko = ({ data, onFetchData }) => {
                   </td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <div className="flex justify-center gap-2 items-center">
-                      <ModalEditResiko
-                        item={item}
-                        checkFetchData={onFetchData}
-                      />
-                      <ModalDeleteResiko
+                      <ModalEditRisk item={item} checkFetchData={onFetchData} />
+                      <ModalDeleteRisk
                         id={item._id}
                         checkFetchData={onFetchData}
                       />
@@ -851,9 +852,14 @@ export const TableResiko = ({ data, onFetchData }) => {
           <Button
             size="sm"
             variant="outlined"
-            disabled={currentPage === 1 || isLoading || isLoading}
+            disabled={currentPage === totalPages || isLoading}
             onClick={handlePrevPage}
             className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Prev
           </Button>
@@ -884,6 +890,11 @@ export const TableResiko = ({ data, onFetchData }) => {
             disabled={currentPage === totalPages || isLoading}
             onClick={handleNextPage}
             className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Next
           </Button>

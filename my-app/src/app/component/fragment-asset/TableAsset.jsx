@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 import { ItemsOptionDashboardAdmin } from "../ItemOptionTable";
-import { BiFilter, BiSolidFilterAlt, BiTrash } from "react-icons/bi";
+import { BiSolidFilterAlt, BiTrash } from "react-icons/bi";
 import {
   FaCalendarAlt,
   FaFilePdf,
@@ -20,9 +20,9 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "react-toastify";
 import { SearchInput } from "../SearchInput";
-import { ModalEditDoc } from "./ModalEditAsset";
-import { ModalDeleteDoc } from "./ModalDeleteAsset";
-import { ModalCreateDoc } from "./ModalCreateAsset";
+import { ModalEditAsset } from "./ModalEditAsset";
+import { ModalDeleteAsset } from "./ModalDeleteAsset";
+import { ModalCreateAsset } from "./ModalCreateAsset";
 
 export const TableAsset = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -376,7 +376,7 @@ export const TableAsset = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex justify-end">
-        <ModalCreateDoc checkFetchData={handleFetchData} />
+        <ModalCreateAsset checkFetchData={handleFetchData} />
       </div>
       <div className="flex flex-wrap md:flex-row md:justify-between items-center my-5 gap-3">
         <div className="flex gap-2">
@@ -722,7 +722,6 @@ export const TableAsset = ({ data, onFetchData }) => {
           <thead
             style={{
               backgroundColor: "var(--bg-Table)",
-              borderRight: "1px solid var(--sidebar-border)",
               color: "var(--sidebar-text)",
             }}
           >
@@ -763,7 +762,6 @@ export const TableAsset = ({ data, onFetchData }) => {
           <tbody
             style={{
               backgroundColor: "var(--bg-Table)",
-              borderRight: "1px solid var(--sidebar-border)",
               color: "var(--sidebar-text)",
             }}
             className={` divide-y divide-gray-200 ${
@@ -803,8 +801,11 @@ export const TableAsset = ({ data, onFetchData }) => {
                   </td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <div className="flex justify-center gap-2 items-center">
-                      <ModalEditDoc item={item} checkFetchData={onFetchData} />
-                      <ModalDeleteDoc
+                      <ModalEditAsset
+                        item={item}
+                        checkFetchData={onFetchData}
+                      />
+                      <ModalDeleteAsset
                         id={item._id}
                         checkFetchData={onFetchData}
                       />
@@ -854,7 +855,12 @@ export const TableAsset = ({ data, onFetchData }) => {
             variant="outlined"
             disabled={currentPage === 1 || isLoading || isLoading}
             onClick={handlePrevPage}
-            className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            className="py-2 px-3 text-xs"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Prev
           </Button>
@@ -884,7 +890,12 @@ export const TableAsset = ({ data, onFetchData }) => {
             variant="outlined"
             disabled={currentPage === totalPages || isLoading}
             onClick={handleNextPage}
-            className="py-2 px-3 text-xs border border-gray-300 hover:bg-gray-100"
+            className="py-2 px-3 text-xs"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              color: "var(--sidebar-text)",
+              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+            }}
           >
             Next
           </Button>

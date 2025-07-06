@@ -100,7 +100,7 @@ export default function Sidebar() {
           color: "var(--sidebar-text)",
         }}
         className={`fixed left-0 max-w-[720px] min-h-screen ${
-          isOpen ? "w-[80px]" : "w-[360px]"
+          isOpen ? "w-[80px]" : "w-[330px]"
         }`}
       >
         <div className="mt-[80px] flex flex-col h-[calc(100vh-80px)]">
@@ -160,7 +160,7 @@ export default function Sidebar() {
                 </span>
                 {!isOpen && (
                   <span
-                    className="ml-4 text-lg  tracking-wide menu-text"
+                    className="ml-4 text-[14px] font-medium  tracking-wide menu-text"
                     style={{
                       color:
                         active === Datasbtn[0].path
@@ -236,7 +236,7 @@ export default function Sidebar() {
                   </span>
                   {!isOpen && (
                     <span
-                      className="ml-4 text-lg tracking-wide dropdown-text"
+                      className="ml-4 text-[14px] font-medium uppercase tracking-wide dropdown-text"
                       style={{
                         color: dropdownItems.some(
                           (item) => active === item.path
@@ -251,7 +251,7 @@ export default function Sidebar() {
                 </div>
                 {!isOpen && (
                   <span
-                    className="text-lg dropdown-chevron"
+                    className="text-[14px] dropdown-chevron"
                     style={{
                       color: dropdownItems.some((item) => active === item.path)
                         ? "var(--sidebar-active-text)"
@@ -315,7 +315,7 @@ export default function Sidebar() {
                         }}
                       >
                         <span
-                          className="text-lg mr-3 dropdown-item-icon"
+                          className="text-[14px] font-medium  mr-3 dropdown-item-icon"
                           style={{
                             color:
                               active === item.path
@@ -326,7 +326,7 @@ export default function Sidebar() {
                           {item.icon}
                         </span>
                         <span
-                          className="text-xs  dropdown-item-text"
+                          className="text-xs font-medium uppercase dropdown-item-text"
                           style={{
                             color:
                               active === item.path
@@ -397,7 +397,7 @@ export default function Sidebar() {
                   </span>
                   {!isOpen && (
                     <span
-                      className="ml-4 text-lg  tracking-wide menu-text"
+                      className="ml-4 text-[14px] font-medium uppercase tracking-wide menu-text"
                       style={{
                         color:
                           active === item.path
@@ -453,7 +453,7 @@ export default function Sidebar() {
               }}
             >
               <span
-                className="text-lg logout-icon"
+                className="text-[14px] logout-icon"
                 style={{
                   color:
                     active === Datasbtn[Datasbtn.length - 1].path
@@ -465,7 +465,7 @@ export default function Sidebar() {
               </span>
               {!isOpen && (
                 <span
-                  className="ml-4 text-lg  tracking-wide logout-text"
+                  className="ml-4 text-[14px]  tracking-wide logout-text"
                   style={{
                     color:
                       active === Datasbtn[Datasbtn.length - 1].path
@@ -519,13 +519,13 @@ export default function Sidebar() {
             }}
           >
             <h2
-              className="text-lg font-semibold mb-4"
+              className="text-[14px] font-medium mb-4"
               style={{ color: "var(--sidebar-text)" }}
             >
               Konfirmasi Logout
             </h2>
             <p
-              className="mb-6 text-lg"
+              className="mb-6 text-[14px]"
               style={{ color: "var(--sidebar-icon)" }}
             >
               Apakah Anda yakin ingin keluar?

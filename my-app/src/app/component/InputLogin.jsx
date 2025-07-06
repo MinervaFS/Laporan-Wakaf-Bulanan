@@ -139,7 +139,7 @@ export default function InputLogin() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full py-3 rounded-xl text-white bg-amber-500 hover:bg-green-700 transition text-base font-semibold flex justify-center items-center"
+          className="w-full py-3 rounded-xl text-white bg-amber-500 hover:bg-amber-600 transition text-base font-semibold flex justify-center items-center"
         >
           {loading ? (
             <span className="animate-pulse">Loading...</span>

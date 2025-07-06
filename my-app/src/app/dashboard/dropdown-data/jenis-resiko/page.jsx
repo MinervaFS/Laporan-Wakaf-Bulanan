@@ -1,5 +1,7 @@
 "use client";
-import { TableResiko } from "@/app/component/fragment-resiko/TableResiko";
+import { ModalDeleteRisk } from "@/app/component/fragment-resiko/ModalDeleteRisk";
+import { ModalEditRisk } from "@/app/component/fragment-resiko/ModalEditRisk";
+import { TableRisk } from "@/app/component/fragment-resiko/TableRisk";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -85,7 +87,9 @@ export default function Resiko() {
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
-        <TableResiko />
+        <TableRisk />
+        <ModalEditRisk />
+        <ModalDeleteRisk />
       </div>
     </div>
   );

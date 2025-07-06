@@ -43,7 +43,11 @@ export const SearchInput = ({ onSearch }) => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholder="Cari sesuatu..."
-        className="search-input w-full pl-10 pr-10 py-3 border-2 border-gray-300 rounded-md text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
+        className="search-input w-full pl-10 pr-10 py-3 rounded-md text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
+        style={{
+          backgroundColor: "var(--bg-Table)",
+          border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+        }}
       />
     </div>
   );
