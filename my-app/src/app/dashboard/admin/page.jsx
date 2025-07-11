@@ -2,6 +2,7 @@
 import { TableDoc } from "@/app/component/fragment-doc/Tabledoc";
 import { TableDashboardAdmin } from "@/app/component/TableDashboardAdmin";
 import { useEffect, useState } from "react";
+import { BiData } from "react-icons/bi";
 
 export default function DashboardAdmin() {
   const [data, setData] = useState([]);
@@ -134,11 +135,25 @@ export default function DashboardAdmin() {
         </div>
         <div className="w-full">{/* <BarChartYearly /> */}</div>
       </div>
-      {/* <div className="">
-        <h1 className="text-3xl font-semibold text-gray-800">
-          Total Tabel Laporan
+      <div className="inline ">
+        <h1
+          className="text-3xl  font-semibold flex items-center gap-2"
+          style={{
+            color: "var(--text-table)",
+          }}
+        >
+          <BiData className="text-4xl" />
+          <span
+            style={{
+              borderBottom: "2px solid var(--sidebar-text)",
+            }}
+          >
+            Dashboard
+          </span>
+          <span className="text-amber-500">.</span>
         </h1>
-      </div> */}
+      </div>
+
       <div className="">
         {/* <TableDashboard data={data} totalReport={totalReport} /> */}
         {/* <TableDashboardAdmin /> */}

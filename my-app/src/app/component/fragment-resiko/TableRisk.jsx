@@ -375,66 +375,69 @@ export const TableRisk = ({ data, onFetchData }) => {
 
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-10">
         <ModalCreateRisk checkFetchData={handleFetchData} />
       </div>
-      <div className="flex flex-wrap md:flex-row md:justify-between items-center my-5 gap-3">
-        <div className="flex gap-2">
-          {selectedIds.length > 0 && (
+      <div className="flex flex-col  md:flex-row md:justify-between md:items-center my-5 gap-4">
+        {/* Kiri: Tombol Hapus dan PDF */}
+        <div className="flex flex-col-reverse sm:flex-row gap-2">
+          {selectedIds > 0 && (
             <Button
               className="flex items-center bg-red-500 text-white hover:bg-red-600"
               onClick={handleBulkDeleteClick}
               disabled={isLoading}
             >
               <BiTrash size={20} />
-              <span className="hidden sm:inline ml-1">
+              <span className="ml-1">
                 Hapus Terpilih ({selectedIds.length})
               </span>
             </Button>
           )}
+          {/* <Button
+                     className="w-full sm:w-auto flex items-center justify-center bg-red-500 text-white hover:bg-red-600"
+                     onClick={handleBulkDeleteClick}
+                     disabled={isLoading}
+                   >
+                     <BiTrash size={20} />
+                     <span className="ml-1">Hapus Terpilih ({selectedIds.length})</span>
+                   </Button> */}
 
-          {/* Tombol PDF */}
           <Button
-            className="flex items-center bg-amber-600"
+            className="w-full sm:w-auto flex items-center justify-center bg-amber-600 text-white hover:bg-amber-700"
             onClick={generatePDF}
             disabled={isLoading}
           >
             <FaFilePdf className="mr-1" />
-            <span className="hidden sm:inline">PDF</span>
+            <span>Buat PDF</span>
           </Button>
         </div>
 
-        <div className="flex space-x-3 items-center">
-          <div className="flex justify-end items-end space-x-2.5">
-            {/* <Search onSearch={handleSearch} onValue={searchQuery} /> */}
-            <div className="relative">
-              {/* <Search onSearch={handleSearch} onValue={searchQuery} /> */}
-              <SearchInput onSearch={handleSearch} onValue={searchQuery} />
-              {isLoading && (
-                <div className="absolute right-8 top-4">
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div>
-                </div>
-              )}
-            </div>
+        {/* Kanan: Search dan Filter */}
+        <div className="flex flex-row gap-2 md:items-center">
+          {/* SearchInput memanjang di mobile */}
+          <div className="relative w-full sm:w-auto">
+            <SearchInput onSearch={handleSearch} onValue={searchQuery} />
+            {isLoading && (
+              <div className="absolute right-8 top-4">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+              </div>
+            )}
+          </div>
 
-            {/* Tombol Filter Tanggal */}
+          {/* Tombol filter tetap kecil */}
+          <div className="shrink-0">
             <Button
-              className={"flex items-center"}
+              className="flex items-center rounded-xl"
               style={{
                 backgroundColor: "var(--bg-Table)",
                 color: "var(--sidebar-text)",
-                border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+                border: "2px solid var(--sidebar-border)",
               }}
               onClick={() => setShowDateFilter(!showDateFilter)}
               disabled={isLoading}
             >
-              <BiSolidFilterAlt
-                size={20}
-                style={{
-                  color: "var(--sidebar-text)",
-                }}
-              />
-              <span className="hidden sm:inline"></span>
+              <BiSolidFilterAlt size={20} />
+              <span className="hidden sm:inline ml-1">Filter</span>
             </Button>
           </div>
         </div>
@@ -647,58 +650,142 @@ export const TableRisk = ({ data, onFetchData }) => {
       )}
 
       {/* Bulk Delete Modal */}
-      <Dialog
-        open={showBulkDeleteModal}
-        handler={handleCloseBulkDeleteModal}
-        size="md"
-      >
-        <DialogHeader className="flex items-center gap-3">
-          <FaExclamationTriangle className="text-red-500 text-xl" />
-          <span>Konfirmasi Hapus Data</span>
-        </DialogHeader>
-        <DialogBody className="">
-          <div className="space-y-3">
-            <p>
-              Anda yakin ingin menghapus <strong>{selectedIds.length}</strong>{" "}
-              data yang dipilih?
-            </p>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3">
-              <p className="text-sm text-yellow-800">
-                <strong>Peringatan:</strong> Tindakan ini tidak dapat
-                dibatalkan. Data yang sudah dihapus tidak dapat dikembalikan.
-              </p>
+      {showBulkDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={!isLoading ? handleCloseBulkDeleteModal : undefined}
+          />
+
+          {/* Modal Content */}
+          <div
+            style={{
+              backgroundColor: "var(--modal-bg)",
+              border: "3px solid var(--modal-border)",
+            }}
+            className="relative rounded-xl shadow-2xl max-w-md w-full mx-4 animate-in zoom-in-95 fade-in duration-200"
+          >
+            {/* Header */}
+            <div className="flex flex-col items-center gap-4 px-6 pt-8 pb-6 text-center">
+              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+                <FaExclamationTriangle className="text-red-500 text-3xl" />
+              </div>
+              <div>
+                <h3
+                  style={{
+                    color: "var(--modal-text-color)",
+                  }}
+                  className="text-xl font-semibold text-gray-900 mb-2"
+                >
+                  Konfirmasi Hapus Data
+                </h3>
+                <p
+                  style={{
+                    color: "var(--modal-text-color)",
+                  }}
+                  className="text-gray-600 text-sm"
+                >
+                  Pastikan Anda yakin dengan tindakan ini
+                </p>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="px-6 pb-6">
+              <div className="space-y-5">
+                {/* Data Count */}
+                <div
+                  style={{
+                    backgroundColor: "var(--bg-bulk-delete)",
+                    border: "3px solid var(--modal-border)",
+                  }}
+                  className="rounded-lg p-4 b"
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      style={{
+                        color: "var(--modal-text-color)",
+                      }}
+                      className="text-sm text-gray-600"
+                    >
+                      Jumlah data yang akan dihapus:
+                    </span>
+                    <span className="text-lg font-bold text-red-500">
+                      {selectedIds.length} item
+                    </span>
+                  </div>
+                </div>
+
+                {/* Warning Box */}
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <svg
+                        className="w-5 h-5 text-red-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-red-700 mb-1">
+                        Peringatan Penting
+                      </h4>
+                      <p className="text-sm text-red-700 leading-relaxed">
+                        Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+                        Data yang sudah dihapus tidak dapat dikembalikan.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-3 px-6 pb-6 pt-2  border-gray-100">
+              {/* Tombol Batal */}
+              <Button
+                type="button"
+                variant="outlined"
+                color="gray"
+                onClick={handleCloseBulkDeleteModal}
+                disabled={isLoading}
+                className="px-6 py-2.5 border-gray-300 hover:bg-[var(--modal-btn-hover)] transition-colors duration-200"
+                style={{
+                  color: "var(--modal-text-color)",
+                }}
+              >
+                Batal
+              </Button>
+
+              {/* Tombol Hapus */}
+              <Button
+                onClick={handleConfirmBulkDelete}
+                disabled={isLoading}
+                className="bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white text-sm rounded-lg px-6 py-2.5 font-medium transition-all duration-200 hover:shadow-md "
+              >
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white -transparent"></div>
+                    <span>Menghapus...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <BiTrash size={16} />
+                    <span>Hapus Data</span>
+                  </div>
+                )}
+              </Button>
             </div>
           </div>
-        </DialogBody>
-        <DialogFooter className="space-x-2">
-          <Button
-            onClick={handleCloseBulkDeleteModal}
-            disabled={isLoading}
-            variant="outlined"
-            className="!border-gray-300 ! hover:!bg-gray-100 rounded-full px-5 py-2 normal-case"
-          >
-            Batal
-          </Button>
-          <Button
-            onClick={handleConfirmBulkDelete}
-            disabled={isLoading}
-            variant="contained"
-            className="!bg-red-600 hover:!bg-red-700 text-white rounded-full px-6 py-2 normal-case"
-          >
-            {isLoading ? (
-              <div className="flex flex-row items-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                Menghapus
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <BiTrash className="mr-2" size={16} />
-                Hapus Data
-              </div>
-            )}
-          </Button>
-        </DialogFooter>
-      </Dialog>
+        </div>
+      )}
 
       {/* Table */}
       <div

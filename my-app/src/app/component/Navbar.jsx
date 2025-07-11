@@ -87,7 +87,7 @@ export default function Navbar() {
     {
       id: 1,
       title: "Dashboard",
-      path: "/dashboard",
+      path: "/dashboard/admin",
       icon: <BiSolidBarChartAlt2 />,
     },
     {
@@ -114,19 +114,19 @@ export default function Navbar() {
     {
       id: 1,
       title: "Buat Jenis Asset",
-      path: "/dashboard/master-data/jenis-asset",
+      path: "/dashboard/dropdown-data/jenis-asset",
       icon: <BiFolder />,
     },
     {
       id: 2,
       title: "Buat Dokumen Baru",
-      path: "/dashboard/master-data/dokumen",
+      path: "/dashboard/dropdown-data/dokumen",
       icon: <BiFile />,
     },
     {
       id: 3,
       title: "Buat Jenis Resiko",
-      path: "/dashboard/master-data/jenis-resiko",
+      path: "/dashboard/dropdown-data/jenis-resiko",
       icon: <BiShield />,
     },
   ];
@@ -197,34 +197,50 @@ export default function Navbar() {
           className="block xl:hidden p-2 rounded-md hover:bg-gray-100 md:hover:bg-gray-500 transition-colors nav-toggle"
         >
           {isNavOpen ? (
-            <BiX size={24} className="text-black md:text-white" />
+            <BiX
+              size={24}
+              style={{
+                color: "var(--text-table)",
+              }}
+              className=" md:text-white"
+            />
           ) : (
-            <BiMenu size={24} className="text-black md:text-white" />
+            <BiMenu
+              size={24}
+              style={{
+                color: "var(--text-table)",
+              }}
+              className=" md:text-white"
+            />
           )}
         </div>
 
         <ul
+          style={{
+            backgroundColor: "var(--bg-Table)",
+            color: "var(--sidebar-text)",
+          }}
           className={`mobile-nav ${
             isNavOpen
-              ? "fixed xl:hidden left-0 top-0 w-[60%] h-full bg-white shadow-lg ease-in-out duration-500 z-50 flex flex-col"
+              ? "fixed xl:hidden left-0 top-0 w-[60%] h-full shadow-lg ease-in-out duration-500 z-50 flex flex-col"
               : "fixed w-[60%] top-0 bottom-0 left-[-100%] ease-in-out duration-500 z-50 flex flex-col"
           }`}
         >
           {/* Header - Fixed */}
-          <li className="p-4 border-b border-gray-200 flex-shrink-0">
-            <h2 className="text-xl font-bold text-gray-800">
+          <li className="p-4   flex-shrink-0">
+            <h2 className="text-xl font-bold ">
               AB - Report<span className="text-amber-400">.</span>
             </h2>
           </li>
 
           {/* Profile Section - Fixed */}
-          <li className="p-4 border-b border-gray-100 flex-shrink-0">
+          <li className="p-4 flex-shrink-0">
             <Link href="/dashboard/profile" onClick={closeNav}>
               <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                  <BiSolidUser className="text-gray-600" />
+                  <BiSolidUser className="" />
                 </div>
-                <span className="font-medium text-gray-700">Profile</span>
+                <span className="font-medium ">Profile</span>
               </div>
             </Link>
           </li>
@@ -237,28 +253,28 @@ export default function Navbar() {
               key={navItems[0].id}
               onClick={closeNav}
             >
-              <li className="p-5 border-b border-gray-300 hover:bg-gray-50 cursor-pointer duration-300">
+              <li className="p-5  border-gray-300 hover:bg-gray-50 cursor-pointer duration-300">
                 <div className="flex items-center space-x-3">
-                  <span className="text-gray-600">{navItems[0].icon}</span>
-                  <span className="text-gray-700">{navItems[0].title}</span>
+                  <span className="">{navItems[0].icon}</span>
+                  <span className="">{navItems[0].title}</span>
                 </div>
               </li>
             </Link>
 
             {/* Dropdown Menu Item - Buat Kategori */}
-            <li className="border-b border-gray-300">
+            <li className=" border-gray-300">
               <div
                 onClick={toggleDropdown}
                 className="p-5 hover:bg-gray-50 cursor-pointer duration-300"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <span className="text-gray-600">
+                    <span className="">
                       <BiCategoryAlt />
                     </span>
-                    <span className="text-gray-700">Buat Kategori</span>
+                    <span className="">Buat Kategori</span>
                   </div>
-                  <span className="text-gray-600">
+                  <span className="">
                     {isDropdownOpen ? <BiChevronUp /> : <BiChevronDown />}
                   </span>
                 </div>
@@ -266,7 +282,7 @@ export default function Navbar() {
 
               {/* Dropdown Items */}
               {isDropdownOpen && (
-                <div className="bg-gray-50 border-t border-gray-200">
+                <div className="bg-gray-50 border-t ">
                   {dropdownItems.map((item) => (
                     <Link href={item.path} key={item.id} onClick={closeNav}>
                       <div className="pl-12 pr-5 py-3 hover:bg-gray-100 cursor-pointer duration-300">
@@ -274,9 +290,7 @@ export default function Navbar() {
                           <span className="text-gray-500 text-sm">
                             {item.icon}
                           </span>
-                          <span className="text-gray-600 text-sm">
-                            {item.title}
-                          </span>
+                          <span className=" text-sm">{item.title}</span>
                         </div>
                       </div>
                     </Link>
@@ -288,10 +302,10 @@ export default function Navbar() {
             {/* Rest of nav items (excluding Dashboard) */}
             {navItems.slice(1).map((item) => (
               <Link href={item.path} key={item.id} onClick={closeNav}>
-                <li className="p-5 border-b border-gray-300 hover:bg-gray-50 cursor-pointer duration-300">
+                <li className="p-5  border-gray-300 hover:bg-gray-50 cursor-pointer duration-300">
                   <div className="flex items-center space-x-3">
-                    <span className="text-gray-600">{item.icon}</span>
-                    <span className="text-gray-700">{item.title}</span>
+                    <span className="">{item.icon}</span>
+                    <span className="">{item.title}</span>
                   </div>
                 </li>
               </Link>
@@ -299,8 +313,8 @@ export default function Navbar() {
           </div>
 
           {/* Logout Button - Fixed at Bottom */}
-          <li className="p-5 border-t border-gray-200 flex-shrink-0 mt-auto">
-            <Button onClick={openModal} className="w-full">
+          <li className="p-5 border-t  flex-shrink-0 mt-auto">
+            <Button color="red" onClick={openModal} className="w-full">
               <div className="flex items-center justify-center space-x-3">
                 <span>
                   <BiLogOut />

@@ -1,4 +1,7 @@
 "use client";
+import { ModalDelete } from "@/app/component/fragment-laporan/digitalisasi-3/ModalDelete";
+import { ModalEdit } from "@/app/component/fragment-laporan/digitalisasi-3/ModalEdit";
+import { TableDigitalisasi } from "@/app/component/fragment-laporan/digitalisasi-3/Table";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -84,6 +87,9 @@ export default function Digitalisasi() {
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
+        <TableDigitalisasi />
+        <ModalEdit />
+        <ModalDelete />
       </div>
     </div>
   );

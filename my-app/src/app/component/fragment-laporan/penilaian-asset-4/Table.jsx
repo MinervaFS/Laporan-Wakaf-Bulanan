@@ -9,8 +9,13 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
-import { ItemsOptionDashboardAdmin } from "../ItemOptionTable";
-import { BiSolidFilterAlt, BiTrash } from "react-icons/bi";
+import { ItemsOptionDashboardAdmin } from "../../ItemOptionTable";
+import {
+  BiChevronRight,
+  BiFilter,
+  BiSolidFilterAlt,
+  BiTrash,
+} from "react-icons/bi";
 import {
   FaCalendarAlt,
   FaFilePdf,
@@ -19,12 +24,13 @@ import {
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "react-toastify";
-import { SearchInput } from "../SearchInput";
-import { ModalEditAsset } from "./ModalEditAsset";
-import { ModalDeleteAsset } from "./ModalDeleteAsset";
-import { ModalCreateAsset } from "./ModalCreateAsset";
+import { SearchInput } from "../../SearchInput";
+import { ModalEdit } from "./ModalEdit";
+import { ModalDelete } from "./ModalDelete";
+import { ModalCreate } from "./ModalCreate";
+import { useRouter } from "next/navigation";
 
-export const TableAsset = ({ data, onFetchData }) => {
+export const TablePenilaianAsset = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +46,16 @@ export const TableAsset = ({ data, onFetchData }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateFilter, setShowDateFilter] = useState(false);
+
+  // pindah menu laporan
+  const router = useRouter();
+
+  const handleMenu = (e) => {
+    const selectedMenu = e.target.value;
+    if (selectedMenu) {
+      router.push(selectedMenu);
+    }
+  };
 
   useEffect(() => {
     setFilteredData(data);
@@ -373,10 +389,103 @@ export const TableAsset = ({ data, onFetchData }) => {
     }
   };
 
+  const menuLaporan = [
+    {
+      id: 1,
+      title: "Menu Informasi Umum",
+      path: "/dashboard/laporan/info-umum",
+    },
+    {
+      id: 2,
+      title: "Menu Inventarisasi",
+      path: "/dashboard/laporan/inventarisasi",
+    },
+    {
+      id: 3,
+      title: "Menu Digitalisasi",
+      path: "/dashboard/laporan/digitalisasi",
+    },
+    {
+      id: 4,
+      title: "Menu Penilaian Asset",
+      path: "/dashboard/laporan/penilaian-asset",
+    },
+    {
+      id: 5,
+      title: "Menu Pengelolaan",
+      path: "/dashboard/laporan/pengelolaan",
+    },
+    {
+      id: 6,
+      title: "Menu Pemanfaatan",
+      path: "/dashboard/laporan/pemanfaatan",
+    },
+    {
+      id: 7,
+      title: "Menu Kapasitas SDM",
+      path: "/dashboard/laporan/kapasitas-sdm",
+    },
+    {
+      id: 8,
+      title: "Menu Sistem IT",
+      path: "/dashboard/laporan/sistem-it",
+    },
+    {
+      id: 9,
+      title: "Menu Kepatuhan",
+      path: "/dashboard/laporan/kepatuhan",
+    },
+    {
+      id: 10,
+      title: "Menu Pelaporan",
+      path: "/dashboard/laporan/pelaporan",
+    },
+    {
+      id: 11,
+      title: "Menu Risiko",
+      path: "/dashboard/laporan/risiko",
+    },
+    {
+      id: 12,
+      title: "Menu Rangkuman",
+      path: "/dashboard/laporan/rangkuman",
+    },
+  ];
+
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
-      <div className="flex justify-end mt-10">
-        <ModalCreateAsset checkFetchData={handleFetchData} />
+      <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
+        <div className="w-full sm:w-auto">
+          <label
+            style={{ color: "var( --text-title)" }}
+            className="block text-md font-medium mb-2"
+          >
+            <span className="font-bold">Pilih Menu Laporan :</span>
+          </label>
+
+          <select
+            onChange={handleMenu}
+            className="search-input w-full pl-5 py-2 text-center md:text-left rounded-xl text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
+            style={{
+              backgroundColor: "var(--bg-Table)",
+              border: "2px solid var(--sidebar-border)",
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled hidden>
+              Pilih Menu Laporan
+            </option>
+
+            {menuLaporan.map((item) => (
+              <option key={item.id} value={item.path}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mt-6">
+          <ModalCreate checkFetchData={handleFetchData} />
+        </div>
       </div>
 
       <div className="flex flex-col  md:flex-row md:justify-between md:items-center my-5 gap-4">
@@ -395,13 +504,13 @@ export const TableAsset = ({ data, onFetchData }) => {
             </Button>
           )}
           {/* <Button
-                   className="w-full sm:w-auto flex items-center justify-center bg-red-500 text-white hover:bg-red-600"
-                   onClick={handleBulkDeleteClick}
-                   disabled={isLoading}
-                 >
-                   <BiTrash size={20} />
-                   <span className="ml-1">Hapus Terpilih ({selectedIds.length})</span>
-                 </Button> */}
+            className="w-full sm:w-auto flex items-center justify-center bg-red-500 text-white hover:bg-red-600"
+            onClick={handleBulkDeleteClick}
+            disabled={isLoading}
+          >
+            <BiTrash size={20} />
+            <span className="ml-1">Hapus Terpilih ({selectedIds.length})</span>
+          </Button> */}
 
           <Button
             className="w-full sm:w-auto flex items-center justify-center bg-amber-600 text-white hover:bg-amber-700"
@@ -506,8 +615,8 @@ export const TableAsset = ({ data, onFetchData }) => {
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                       className="w-full py-3 px-4 pr-12 border rounded-xl shadow-sm
-                         focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                         transition-all duration-200"
+                             focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
+                             transition-all duration-200"
                       disabled={isLoading}
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -539,8 +648,8 @@ export const TableAsset = ({ data, onFetchData }) => {
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                       className="w-full py-3 px-4 pr-12 border rounded-xl shadow-sm
-                         focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                         transition-all duration-200"
+                             focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
+                             transition-all duration-200"
                       disabled={isLoading}
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -563,18 +672,18 @@ export const TableAsset = ({ data, onFetchData }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200/50">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4  border-gray-200/50">
                 <Button
                   className="bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 
-                     focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-medium 
-                     transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md 
-                     disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-initial justify-center"
+                         focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-medium 
+                         transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md 
+                         disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-initial justify-center"
                   onClick={handleDateFilterChange}
                   disabled={!startDate || !endDate || isLoading}
                 >
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white -transparent"></div>
                       <span>Memproses...</span>
                     </>
                   ) : (
@@ -599,9 +708,9 @@ export const TableAsset = ({ data, onFetchData }) => {
 
                 <Button
                   className="bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700 
-                     focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-medium 
-                     transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md 
-                     disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-initial justify-center"
+                         focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-medium 
+                         transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md 
+                         disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-initial justify-center"
                   onClick={handleResetDateFilter}
                   disabled={isLoading}
                 >
@@ -790,7 +899,7 @@ export const TableAsset = ({ data, onFetchData }) => {
 
       {/* Table */}
       <div
-        className="w-full overflow-x-auto rounded-2xl"
+        className="custom-scrollbar w-full overflow-x-auto rounded-2xl"
         style={{
           border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
         }}
@@ -833,11 +942,23 @@ export const TableAsset = ({ data, onFetchData }) => {
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 No
               </th>
+              <th className="px-6 py-3 text-left whitespace-nowrap text-xs font-bold uppercase tracking-wider">
+                Nama
+              </th>
+              <th className="px-6 py-3 text-left whitespace-nowrap text-xs font-bold uppercase tracking-wider">
+                Periode Laporan
+              </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Tanggal Dibuat
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jenis Pemanfaatan Asset
+                Jumlah Aset Dinilai (Bulan Ini)
+              </th>
+              <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
+                Nilai Total Aset Wakaf
+              </th>
+              <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
+                Kendala dalam Penilaian Aset
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Action
@@ -852,7 +973,7 @@ export const TableAsset = ({ data, onFetchData }) => {
               backgroundColor: "var(--bg-Table)",
               color: "var(--sidebar-text)",
             }}
-            className={` divide-y divide-gray-200 ${
+            className={`divide-y divide-gray-200 ${
               isLoading ? "opacity-50" : ""
             }`}
           >
@@ -870,35 +991,36 @@ export const TableAsset = ({ data, onFetchData }) => {
                       disabled={isLoading}
                     />
                   </td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm ">
+
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     {firstIndex + index + 1}
                   </td>
-                  <td className="px-6 text-center py-4 whitespace-nowrap text-sm ">
+
+                  <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
+                    {item.nama || <span className="font-bold text-xl">-</span>}
+                  </td>
+
+                  <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
+                    {item.periodeLaporan || (
+                      <span className="font-bold text-xl">-</span>
+                    )}
+                  </td>
+
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     {new Date(item.createdAt).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
                     })}
                   </td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                    {item.documentType ? (
-                      item.documentType
-                    ) : (
-                      <span className="font-bold text-xl">-</span>
-                    )}
-                  </td>
+
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <div className="flex justify-center gap-2 items-center">
-                      <ModalEditAsset
-                        item={item}
-                        checkFetchData={onFetchData}
-                      />
-                      <ModalDeleteAsset
-                        id={item._id}
-                        checkFetchData={onFetchData}
-                      />
+                      <ModalEdit item={item} checkFetchData={onFetchData} />
+                      <ModalDelete id={item._id} checkFetchData={onFetchData} />
                     </div>
                   </td>
+
                   <td className="px-6 text-center py-4 whitespace-nowrap text-sm">
                     <span className="font-bold text-green-600 px-4 py-2 bg-green-100 border border-green-500 rounded-full">
                       {item.user?.role
@@ -918,7 +1040,7 @@ export const TableAsset = ({ data, onFetchData }) => {
             ) : (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="px-6 py-4 text-center text-sm text-gray-500"
                 >
                   {isLoading ? "Memuat data..." : "Data tidak ada"}

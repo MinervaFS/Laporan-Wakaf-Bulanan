@@ -66,14 +66,14 @@ export default function InputLogin() {
 
   return (
     <main className="w-full min-h-screen flex items-center justify-center bg-[#0e0e0e]">
-      <div className="bg-[#1a1a1a] text-white rounded-2xl p-10 w-[90%] max-w-xl shadow-xl space-y-7">
+      <div className="bg-[#1a1a1a] text-white rounded-2xl p-8 w-[90%] max-w-md shadow-xl space-y-7">
         <div className="flex flex-col items-center">
           <img
             src="/logo-img/Png_LAZ_BARAT.png"
             alt="logo"
             className="w-16 mb-5"
           />
-          <h1 className="text-3xl font-bold">Sign in</h1>
+          <h1 className="text-xl font-bold">Sign in</h1>
         </div>
 
         {error && (

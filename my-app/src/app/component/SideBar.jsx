@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BiCategoryAlt,
   BiLogOut,
@@ -69,6 +69,28 @@ export default function Sidebar() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget && !isLogout) {
+      setIsLogoutModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isLogoutModalOpen && !isLogout) {
+        setIsLogoutModalOpen(false);
+      }
+    };
+
+    if (isLogoutModalOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+    } else {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    }
+  }, [isLogoutModalOpen, isLogout]);
 
   const dropdownItems = [
     {
@@ -510,7 +532,10 @@ export default function Sidebar() {
 
       {/* Logout Modal - Dynamic Theme */}
       {isLogoutModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+        <div
+          onClick={handleBackdropClick}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+        >
           <div
             className="border rounded-lg shadow-2xl p-6 w-[90%] max-w-sm"
             style={{
@@ -519,7 +544,7 @@ export default function Sidebar() {
             }}
           >
             <h2
-              className="text-[14px] font-medium mb-4"
+              className="text-[14px] font-bold mb-4"
               style={{ color: "var(--sidebar-text)" }}
             >
               Konfirmasi Logout
@@ -596,14 +621,14 @@ const Datasbtn = [
     path: "/dashboard/users",
     icon: <BiSolidUserAccount />,
   },
+  // {
+  //   id: 4,
+  //   title: "Profile",
+  //   path: "/dashboard/profile",
+  //   icon: <BiSolidUser />,
+  // },
   {
     id: 4,
-    title: "Profile",
-    path: "/dashboard/profile",
-    icon: <BiSolidUser />,
-  },
-  {
-    id: 5,
     title: "Logout",
     path: "/",
     icon: <BiLogOut />,

@@ -9,7 +9,7 @@ export const BtnCreate = ({ onOpen }) => {
         onClick={onOpen}
         className="bg-amber-600 text-white flex items-center shadow-none"
       >
-        Tambah Informasi Umum{" "}
+        Tambah Penilaian Asset{" "}
         <span className="ml-2">
           <BiPlus size={16} />
         </span>

@@ -1,4 +1,7 @@
 "use client";
+import { ModalDelete } from "@/app/component/fragment-laporan/info-umum-1/ModalDelete";
+import { ModalEdit } from "@/app/component/fragment-laporan/info-umum-1/ModalEdit";
+import { TableInfoUmum } from "@/app/component/fragment-laporan/info-umum-1/Table";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -84,6 +87,9 @@ export default function InfoUmum() {
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
+        <TableInfoUmum />
+        <ModalEdit />
+        <ModalDelete />
       </div>
     </div>
   );

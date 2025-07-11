@@ -70,7 +70,7 @@ export default function Resiko() {
   return (
     <div className="flex flex-col items-start p-5 space-y-3">
       <h2
-        className="flex text-xl font-bold items-center mt-10"
+        className="flex text-xl font-bold items-center mt-3"
         style={{ color: "var(--text-sub-title)" }}
       >
         Buat Jenis Resiko

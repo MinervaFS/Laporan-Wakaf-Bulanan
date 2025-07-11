@@ -35,6 +35,9 @@ body[data-theme="light"] {
   --Border-Table:  #989898;
   --bg-Table:  #ffffff;
 
+    --bg-start-index: #ffffff;
+
+
   --border-icon: #000000;
   --text-icon: #000000;
   --text-title: #393939;
@@ -45,6 +48,9 @@ body[data-theme="light"] {
   --modal-bg: #f1f1f1;
   --modal-text-color: #333333;
   --modal-btn-hover: #e8e8e8;
+
+    --bg-bulk-delete: #e8e8e8;
+
 }
 
 body[data-theme="dark"] {
@@ -61,6 +67,9 @@ body[data-theme="dark"] {
 
   --Border-Table: #2a2a2a;
   --bg-Table:  #1a1a1a;
+
+  --bg-start-index: #585858;
+  /* --bg-end-index: #1a1a1a; */
   
   --border-icon: #ffffff;
   --text-icon: #ffffff;
@@ -73,8 +82,33 @@ body[data-theme="dark"] {
   --modal-text-color: #ffffff;
   --modal-btn-hover: #2a2a2a;
 
-
+  --bg-bulk-delete: #2b2b2b;
 }
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
+}
+
 
 .search-input::placeholder {
   color: #9ca3af;

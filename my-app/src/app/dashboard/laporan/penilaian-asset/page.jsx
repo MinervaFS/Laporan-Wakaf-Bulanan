@@ -1,4 +1,7 @@
 "use client";
+import { ModalDelete } from "@/app/component/fragment-laporan/penilaian-asset-4/ModalDelete";
+import { ModalEdit } from "@/app/component/fragment-laporan/penilaian-asset-4/ModalEdit";
+import { TablePenilaianAsset } from "@/app/component/fragment-laporan/penilaian-asset-4/Table";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -84,6 +87,9 @@ export default function KapasitasSdm() {
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
+        <TablePenilaianAsset />
+        <ModalEdit />
+        <ModalDelete />
       </div>
     </div>
   );

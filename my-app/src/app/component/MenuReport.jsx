@@ -10,7 +10,11 @@ export default function MenuLaporan() {
       title: "Info Umum",
       path: "/dashboard/laporan/info-umum",
     },
-    { id: 2, title: "Inventarisasi", path: "/dashboard/laporan/inventarisasi" },
+    {
+      id: 2,
+      title: "Inventarisasi",
+      path: "/dashboard/laporan/inventarisasi",
+    },
     {
       id: 3,
       title: "Digitalisasi",
@@ -18,17 +22,49 @@ export default function MenuLaporan() {
     },
     {
       id: 4,
-      title: "Penilaian Aset",
+      title: "Penilaian Asset",
       path: "/dashboard/laporan/penilaian-asset",
     },
-    { id: 5, title: "Pengelolaan", path: "/dashboard/laporan/pengelolaan" },
-    { id: 6, title: "Pemanfaatan", path: "/dashboard/laporan/pemanfaatan" },
-    { id: 7, title: "Kapasitas SDM", path: "/dashboard/laporan/kapasitas-sdm" },
-    { id: 8, title: "Sistem IT", path: "/dashboard/laporan/sistem-it" },
-    { id: 9, title: "Kepatuhan", path: "/dashboard/laporan/kepatuhan" },
-    { id: 10, title: "Pelaporan", path: "/dashboard/laporan/pelaporan" },
-    { id: 11, title: "Risiko", path: "/dashboard/laporan/risiko" },
-    { id: 12, title: "Rangkuman", path: "/dashboard/laporan/rangkuman" },
+    {
+      id: 5,
+      title: "Pengelolaan",
+      path: "/dashboard/laporan/pengelolaan",
+    },
+    {
+      id: 6,
+      title: "Pemanfaatan",
+      path: "/dashboard/laporan/pemanfaatan",
+    },
+    {
+      id: 7,
+      title: "Kapasitas SDM",
+      path: "/dashboard/laporan/kapasitas-sdm",
+    },
+    {
+      id: 8,
+      title: "Sistem IT",
+      path: "/dashboard/laporan/sistem-it",
+    },
+    {
+      id: 9,
+      title: "Kepatuhan",
+      path: "/dashboard/laporan/kepatuhan",
+    },
+    {
+      id: 10,
+      title: "Pelaporan",
+      path: "/dashboard/laporan/pelaporan",
+    },
+    {
+      id: 11,
+      title: "Risiko",
+      path: "/dashboard/laporan/risiko",
+    },
+    {
+      id: 12,
+      title: "Rangkuman",
+      path: "/dashboard/laporan/rangkuman",
+    },
   ];
 
   const handleClick = (index) => {
@@ -75,7 +111,13 @@ export default function MenuLaporan() {
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#076653] to-[#0c342c] rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg group-hover:from-emerald-600 group-hover:to-teal-700 transition-all duration-300">
                         <BiDetail className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       </div>
-                      <div className="text-xs font-medium text-gray-500 bg-gray-700/50 group-hover:bg-emerald-900/30 group-hover:text-emerald-300 px-2 py-1 rounded-full transition-all duration-300">
+                      <div
+                        style={{
+                          color: "var(--text-title)",
+                          background: "var(--bg-start-index)",
+                        }}
+                        className="text-xs font-medium text-gray-500 group-hover:bg-emerald-900/30 group-hover:text-emerald-300 px-2 py-1 rounded-full transition-all duration-300"
+                      >
                         {String(index + 1).padStart(2, "0")}
                       </div>
                     </div>

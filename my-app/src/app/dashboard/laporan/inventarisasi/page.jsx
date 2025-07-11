@@ -1,4 +1,7 @@
 "use client";
+import { ModalDelete } from "@/app/component/fragment-laporan/inventarisasi-2/ModalDelete";
+import { ModalEdit } from "@/app/component/fragment-laporan/inventarisasi-2/ModalEdit";
+import { TableInventarisasi } from "@/app/component/fragment-laporan/inventarisasi-2/Table";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
 
@@ -84,6 +87,9 @@ export default function Inventarisasi() {
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
         {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
+        <TableInventarisasi />
+        <ModalEdit />
+        <ModalDelete />
       </div>
     </div>
   );
