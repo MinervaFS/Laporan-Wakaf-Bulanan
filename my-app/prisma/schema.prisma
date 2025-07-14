@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum user_role {
+  admin
+  director
+}
+
+model user {
+  id        Int       @id @default(autoincrement())
+  username  String?   @db.VarChar(255)
+  email     String    @unique(map: "User_email_key")
+  password  String
+  createdAt DateTime  @default(now())
+  role      user_role @default(admin)
+
+  joinInfoUmum             infoumum[]
+  joinInventarisasi        inventarisasi[]
+  joinDigitDok             digitalisasidok[]
+  joinKepatuhanHukum       kepatuhanhukum[]
+  joinPelaporanTransparasi pelaporantransaparasi[]
+  joinPemanfaatanAsset     pemanfaatanasset[]
+  joinPengelolaanAsset     pengelolaanasset[]
+  joinPengelolaanResiko    pengelolaanresiko[]
+  joinPenilaianAssetWakaf  penilaianassetwakaf[]
+  joinPeningkatanSDM       peningkatankapasitassdm[]
+  joinRangkumanRekomendasi rangkumanrekomendasi[]
+  joinSistemIT             sisteminformasiteknologi[]
+}
+
+model infoumum {
+  id        Int      @id @default(autoincrement())
+  name      String
+  periode   DateTime
+  createdAt DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model inventarisasi {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  periode              DateTime
+  jumlahAssetTerdaftar Int
+  jumlahDokTerkait     Int
+  catatanInventarisasi String
+  createdAt            DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model digitalisasidok {
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  periode                DateTime
+  dokumenTerdigitalisasi Int
+  totalDokdigitalisasi   Int
+  catatanDigitalDok      String
+  createdAt              DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model kepatuhanhukum {
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  periode               DateTime
+  jumlahDokTerintegrasi Int
+  jenisDokBaru          String
+  catatanRegulasi       String
+  createdAt             DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model pelaporantransaparasi {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  periode             DateTime
+  jumlahLaporanPublik Int
+  feedback            String
+  createdAt           DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model pemanfaatanasset {
+  id                      Int      @id @default(autoincrement())
+  name                    String
+  periode                 DateTime
+  jumlahAssetDimanfaatkan Int
+  jenisPemanfaatan        String
+  persentaseAsset         Int
+  createdAt               DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model pengelolaanasset {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  periode              DateTime
+  jumlahAssetDikelola  Int
+  penghasialAsset      Int
+  jenisPengelolaanBaru String
+  createdAt            DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model pengelolaanresiko {
+  id             Int      @id @default(autoincrement())
+  name           String
+  periode        DateTime
+  ResikoBary     String
+  mitigasiResiko String
+  statusResiko   String
+  createdAt      DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model penilaianassetwakaf {
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  periode               DateTime
+  jumlahAssetDinilai    Int
+  nilaiAssetWakaf       Int
+  catatanPenilaianAsset String
+  createdAt             DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model peningkatankapasitassdm {
+  id               Int      @id @default(autoincrement())
+  name             String
+  periode          DateTime
+  jumlahPelatihan  Int
+  jumlahSdmDilatih Int
+  materi           String
+  createdAt        DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model rangkumanrekomendasi {
+  id              Int      @id @default(autoincrement())
+  name            String
+  periode         DateTime
+  performaBulanan String
+  actionPlan      String
+  createdAt       DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}
+
+model sisteminformasiteknologi {
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  periode                DateTime
+  pengemabanganSistem    String
+  catatanTeknisNonTeknis String
+  createdAt              DateTime @default(now())
+
+  userId Int?
+  user   user? @relation(fields: [userId], references: [id])
+}

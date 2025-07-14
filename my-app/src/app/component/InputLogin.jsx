@@ -1,32 +1,34 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { BiShow, BiHide } from "react-icons/bi";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@material-tailwind/react";
 
 export default function InputLogin() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const handleLogin = async () => {
     setError("");
-    setUsernameError("");
+    setEmailError("");
     setPasswordError("");
 
-    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
-    if (!trimmedUsername) setUsernameError("Username required!");
-    if (!trimmedPassword) setPasswordError("Password required!");
-    if (!trimmedUsername || !trimmedPassword) return;
+    if (!trimmedEmail) setEmailError("Email wajid diisi!");
+    if (!trimmedPassword) setPasswordError("Password wajid diisi!");
+    if (!trimmedEmail || !trimmedPassword) return;
 
     setLoading(true);
 
@@ -35,28 +37,36 @@ export default function InputLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: trimmedUsername,
+          email: trimmedEmail,
           password: trimmedPassword,
         }),
         credentials: "include",
       });
 
       const data = await res.json();
+      try {
+      } catch (jsonErr) {
+        console.error("Failed to parse JSON:", jsonErr);
+        setError("Terjadi kesalahan");
+        setLoading(false);
+        return;
+      }
 
-      if (res.ok) {
-        toast.success("Login Success!");
-        router.push("/dashboard");
-      } else {
+      if (!res.ok) {
         const message = data.message || "Login gagal";
         setError(message);
-        setLoading(false);
 
         if (message.toLowerCase().includes("password")) {
           setPasswordError(message);
-        } else if (message.toLowerCase().includes("username")) {
-          setUsernameError(message);
+        } else if (message.toLowerCase().includes("email")) {
+          setEmailError(message);
         }
+
+        setLoading(false);
+        return;
       }
+      toast.success("Login Success!");
+      router.push("/dashboard/laporan/");
     } catch (err) {
       console.error("Login error:", err);
       setError("Terjadi kesalahan, coba lagi nanti.");
@@ -65,8 +75,20 @@ export default function InputLogin() {
   };
 
   return (
-    <main className="w-full min-h-screen flex items-center justify-center bg-[#0e0e0e]">
-      <div className="bg-[#1a1a1a] text-white rounded-2xl p-8 w-[90%] max-w-md shadow-xl space-y-7">
+    <main
+      style={{
+        backgroundColor: "var(--bg-section-login: #0e0e0e)",
+      }}
+      className="w-full min-h-screen flex items-center justify-center"
+    >
+      <ToastContainer position="top-right" autoClose={1000} />
+      <div
+        style={{
+          backgroundColor: "var(--bg-input-login)",
+          color: "var(--text-login)",
+        }}
+        className="  rounded-2xl p-8 w-[90%] max-w-md shadow-xl space-y-7"
+      >
         <div className="flex flex-col items-center">
           <img
             src="/logo-img/Png_LAZ_BARAT.png"
@@ -83,22 +105,24 @@ export default function InputLogin() {
         )}
 
         <div className="flex flex-col space-y-2">
-          <label htmlFor="username" className="text-base">
+          <label htmlFor="email" className="text-base">
             Email address <span className="text-red-500">*</span>
           </label>
           <input
-            id="username"
+            id="email"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={`rounded-xl px-4 py-3 text-base bg-[#2b2b2b] text-white border ${
-              usernameError ? "border-red-500" : "border-gray-700"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              backgroundColor: "var(--bg-input-form-login)",
+              color: "var(--text-login)",
+            }}
+            className={`rounded-xl px-4 py-3 text-base border ${
+              emailError ? "border-red-500" : "border-gray-700"
             } focus:outline-none focus:ring-2 focus:ring-amber-500`}
             placeholder="Masukan Email"
           />
-          {usernameError && (
-            <p className="text-red-400 text-sm">{usernameError}</p>
-          )}
+          {emailError && <p className="text-red-400 text-sm">{emailError}</p>}
         </div>
 
         <div className="flex flex-col space-y-2">
@@ -111,7 +135,11 @@ export default function InputLogin() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`rounded-xl px-4 py-3 text-base w-full bg-[#2b2b2b] text-white border ${
+              style={{
+                backgroundColor: "var(--bg-input-form-login)",
+                color: "var(--text-login)",
+              }}
+              className={`rounded-xl px-4 py-3 text-base w-full border ${
                 passwordError ? "border-red-500" : "border-gray-700"
               } focus:outline-none focus:ring-2 focus:ring-amber-500`}
               placeholder="Masukan password"
@@ -119,7 +147,10 @@ export default function InputLogin() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2"
+              style={{
+                color: "var(--text-login)",
+              }}
             >
               {showPassword ? <BiHide size={22} /> : <BiShow size={22} />}
             </button>
@@ -139,24 +170,10 @@ export default function InputLogin() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full py-3 rounded-xl text-white bg-amber-500 hover:bg-amber-600 transition text-base font-semibold flex justify-center items-center"
+          className="w-full py-3 rounded-xl text-white bg-amber-500 hover:bg-amber-600 transition text-base font-semibold flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? (
-            <span className="animate-pulse">Loading...</span>
-          ) : (
-            "Sign in"
-          )}
+          {loading ? <Spinner /> : "Sign in"}
         </button>
-
-        {/* <p className="text-center text-white text-sm mt-2">
-          Lupa password?{" "}
-          <button
-            onClick={() => router.push("/reset-password")}
-            className="underline hover:text-green-300 transition"
-          >
-            Reset Password
-          </button>
-        </p> */}
       </div>
     </main>
   );

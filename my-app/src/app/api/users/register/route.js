@@ -1,32 +1,106 @@
 import { NextResponse } from "next/server";
-import sequelize from "../../../../../lib/connect-db";
-import User from "../../../../../lib/model/Auth";
+import { prisma } from "../../../../../lib/prisma";
+import { z } from "zod";
+import bcrypt from "bcrypt";
+
+const userSchema = z.object({
+  username: z.string().min(1, "Nama wajib diisi"),
+  email: z.string().email("Email tidak valid"),
+  password: z.string().min(6, "Password minimal 6 karakter"),
+});
 
 export async function POST(req) {
   try {
-    await sequelize.authenticate(); // pastikan DB terkoneksi
+    const body = await req.json();
+    const parsed = userSchema.parse(body);
 
-    const body = await req.json(); // ambil data dari request body
-
-    const user = await User.create({
-      username: body.username,
-      email: body.email,
+    const existingUser = await prisma.user.findUnique({
+      where: { email: parsed.email },
     });
 
-    return NextResponse.json(user, { status: 201 });
+    if (existingUser) {
+      return NextResponse.json(
+        { message: "Email sudah terdaftar", status: 400 },
+        { status: 400 }
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(parsed.password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        username: parsed.username,
+        email: parsed.email,
+        password: hashedPassword,
+        // role: "user",
+      },
+    });
+
+    return NextResponse.json({
+      message: "User created successfully",
+      data: user,
+      status: 200,
+    });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { message: "Validasi tidak sesuai", errors: error.errors, status: 400 },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        message: "Terjadi kesalahan server",
+        error: error.message,
+        status: 500,
+      },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET() {
   try {
-    await sequelize.authenticate();
+    // Ambil semua user dari database
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-    const users = await User.findAll();
-
-    return NextResponse.json(users, { status: 200 });
+    return NextResponse.json({ data: users, status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        message: "Gagal mengambil data user",
+        error: error.message,
+        status: 500,
+      },
+      { status: 500 }
+    );
   }
 }
+
+// export async function GET() {
+//   try {
+//     const dataUsers = await prisma.user.findMany();
+//     return NextResponse.json({ data: dataUsers, status: 200 });
+//   } catch (error) {
+//     return NextResponse.json(
+//       {
+//         message: "Terjadi kesalahan server",
+//         error: error.message,
+//         status: 500,
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }

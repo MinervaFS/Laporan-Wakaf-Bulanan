@@ -88,7 +88,12 @@ export default function MenuLaporan() {
           >
             Buat Laporan{" "}
           </h1>
-          <p className="text-sm sm:text-base text-gray-400">
+          <p
+            className="text-sm sm:text-base"
+            style={{
+              color: "var(--text-title)",
+            }}
+          >
             Sistem Manejemen Wakaf
           </p>
         </div>

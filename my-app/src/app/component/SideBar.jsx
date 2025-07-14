@@ -44,6 +44,8 @@ export default function Sidebar() {
   const handleLogout = async () => {
     setIsLogout(true);
     try {
+      // localStorage.removeItem("user"); // atau item lain yang memang perlu
+
       const res = await fetch("/api/users/logout", {
         method: "POST",
         headers: {
@@ -93,24 +95,24 @@ export default function Sidebar() {
   }, [isLogoutModalOpen, isLogout]);
 
   const dropdownItems = [
-    {
-      id: 1,
-      title: "Buat Jenis Asset",
-      path: "/dashboard/dropdown-data/jenis-asset",
-      icon: <BiFolder />,
-    },
-    {
-      id: 2,
-      title: "Buat Dokumen Baru",
-      path: "/dashboard/dropdown-data/dokumen",
-      icon: <BiFile />,
-    },
-    {
-      id: 3,
-      title: "Buat Jenis Resiko",
-      path: "/dashboard/dropdown-data/jenis-resiko",
-      icon: <BiShield />,
-    },
+    // {
+    //   id: 1,
+    //   title: "Buat Jenis Asset",
+    //   path: "/dashboard/dropdown-data/jenis-asset",
+    //   icon: <BiFolder />,
+    // },
+    // {
+    //   id: 2,
+    //   title: "Buat Dokumen Baru",
+    //   path: "/dashboard/dropdown-data/dokumen",
+    //   icon: <BiFile />,
+    // },
+    // {
+    //   id: 3,
+    //   title: "Buat Jenis Resiko",
+    //   path: "/dashboard/dropdown-data/jenis-resiko",
+    //   icon: <BiShield />,
+    // },
   ];
 
   return (
@@ -197,8 +199,7 @@ export default function Sidebar() {
             </Link>
 
             {/* Master Data Dropdown */}
-            <div className="relative">
-              {/* === Toggle Dropdown Button === */}
+            {/* <div className="relative">
               <button
                 onClick={toggleDropdown}
                 className={`flex justify-between w-full p-3 items-center rounded-lg transition-all duration-300 group ${
@@ -285,7 +286,6 @@ export default function Sidebar() {
                 )}
               </button>
 
-              {/* === Dropdown Items === */}
               {isDropdownOpen && !isOpen && (
                 <div
                   className="mt-1 space-y-1 ml-6 border-l pl-4"
@@ -363,7 +363,7 @@ export default function Sidebar() {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Other Menu Items */}
             {Datasbtn.slice(1, -1).map((item) => (
@@ -592,7 +592,13 @@ export default function Sidebar() {
                   }
                 }}
               >
-                {isLogout ? "Logging out..." : "Logout"}
+                {isLogout ? (
+                  <div>
+                    <Spinner /> Logging out...
+                  </div>
+                ) : (
+                  "Logout"
+                )}
               </Button>
             </div>
           </div>

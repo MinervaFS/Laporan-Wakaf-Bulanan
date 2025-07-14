@@ -49,7 +49,10 @@ body[data-theme="light"] {
   --modal-text-color: #333333;
   --modal-btn-hover: #e8e8e8;
 
-    --bg-bulk-delete: #e8e8e8;
+   --bg-section-login: #f5f5f5;
+  --bg-input-login: #ffffff;
+  --bg-input-form-login: #f5f5f5;
+  --text-login: #1a1a1a;
 
 }
 
@@ -69,6 +72,9 @@ body[data-theme="dark"] {
   --bg-Table:  #1a1a1a;
 
   --bg-start-index: #585858;
+
+  --bg-input-form-login: #f0f0f0;
+
   /* --bg-end-index: #1a1a1a; */
   
   --border-icon: #ffffff;
@@ -83,6 +89,11 @@ body[data-theme="dark"] {
   --modal-btn-hover: #2a2a2a;
 
   --bg-bulk-delete: #2b2b2b;
+
+  --bg-section-login: #0e0e0e;
+  --bg-input-login: #1a1a1a;
+  --bg-input-form-login: #2b2b2b;
+  --text-login: #ffffff
 }
 
 /* Custom Scrollbar */

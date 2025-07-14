@@ -86,7 +86,6 @@ export default function Digitalisasi() {
         Data Digitalisasi
       </h1>
       <div className="flex flex-wrap justify-center items-center w-full">
-        {/* <TableDoc data={data} onFetchData={fetchingData} /> */}
         <TableDigitalisasi />
         <ModalEdit />
         <ModalDelete />

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -111,24 +111,24 @@ export default function Navbar() {
   ];
 
   const dropdownItems = [
-    {
-      id: 1,
-      title: "Buat Jenis Asset",
-      path: "/dashboard/dropdown-data/jenis-asset",
-      icon: <BiFolder />,
-    },
-    {
-      id: 2,
-      title: "Buat Dokumen Baru",
-      path: "/dashboard/dropdown-data/dokumen",
-      icon: <BiFile />,
-    },
-    {
-      id: 3,
-      title: "Buat Jenis Resiko",
-      path: "/dashboard/dropdown-data/jenis-resiko",
-      icon: <BiShield />,
-    },
+    // {
+    //   id: 1,
+    //   title: "Buat Jenis Asset",
+    //   path: "/dashboard/dropdown-data/jenis-asset",
+    //   icon: <BiFolder />,
+    // },
+    // {
+    //   id: 2,
+    //   title: "Buat Dokumen Baru",
+    //   path: "/dashboard/dropdown-data/dokumen",
+    //   icon: <BiFile />,
+    // },
+    // {
+    //   id: 3,
+    //   title: "Buat Jenis Resiko",
+    //   path: "/dashboard/dropdown-data/jenis-resiko",
+    //   icon: <BiShield />,
+    // },
   ];
 
   return (
@@ -227,11 +227,17 @@ export default function Navbar() {
           }`}
         >
           {/* Header - Fixed */}
-          <li className="p-4   flex-shrink-0">
-            <h2 className="text-xl font-bold ">
-              AB - Report<span className="text-amber-400">.</span>
-            </h2>
+          <li className="p-4 flex-shrink-0">
+            <img
+              src="/logo-img/logo-navbar.png"
+              alt="Logo Navbar"
+              className="w-[135px] mb-2"
+            />
           </li>
+
+          <div className="px-6 pt-4 flex justify-start ">
+            <ThemeToggle />
+          </div>
 
           {/* Profile Section - Fixed */}
           <li className="p-4 flex-shrink-0">
@@ -349,7 +355,13 @@ export default function Navbar() {
                   disabled={isLogout}
                   className="!bg-red-600 hover:!bg-red-700 text-white rounded-lg px-6 py-2 normal-case"
                 >
-                  {isLogout ? "Logging out..." : "Logout"}
+                  {isLogout ? (
+                    <div>
+                      <Spinner /> Logging out...
+                    </div>
+                  ) : (
+                    "Logout"
+                  )}
                 </Button>
               </div>
             </div>
