@@ -10,7 +10,11 @@ export const ModalCreate = ({ checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    documentType: "",
+    name: "",
+    periode: "",
+    jumlahAssetDinilai: 0,
+    nilaiAssetWakaf: 0,
+    catatanPenilaianAsset: "",
   });
 
   const handleOnChange = (e) => {
@@ -28,23 +32,23 @@ export const ModalCreate = ({ checkFetchData }) => {
   const handleModalCreateClose = () => {
     if (!isLoading) {
       setIsModalOpen(false);
-      setFormData({ documentType: "" });
+      setFormData({
+        name: "",
+        periode: "",
+        jumlahAssetDinilai: 0,
+        nilaiAssetWakaf: 0,
+        catatanPenilaianAsset: "",
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
-    if (!formData.documentType.trim()) {
-      toast.error("Jenis dokumen tidak boleh kosong");
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/master-data/new-document", {
+      const res = await fetch("/api/laporan/penilaian-asset-wakaf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,7 +171,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                 <div className="space-y-2">
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="name"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -189,11 +193,11 @@ export const ModalCreate = ({ checkFetchData }) => {
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
+                        id="name"
                         type="text"
-                        name="documentType"
-                        placeholder="Masukan dokumen terdigitalisasi"
-                        value={formData.documentType}
+                        name="name"
+                        placeholder="Masukan nama"
+                        value={formData.name}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -203,88 +207,87 @@ export const ModalCreate = ({ checkFetchData }) => {
                       />
                     </div>
                   </div>
-                  <div className="mt-4 flex flex-col md:flex-row gap-2">
-                    {/* Periode Laporan */}
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="periode"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="inline-flex items-center gap-1 mb-2"
-                        >
-                          <span
-                            style={{
-                              color: "var(--modal-text-color)",
-                            }}
-                            className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                          >
-                            2
-                          </span>
-                          Periode Laporan
-                        </span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="periode"
-                          type="date"
-                          name="periode"
-                          value={formData.periode}
-                          onChange={handleOnChange}
-                          disabled={isLoading}
-                          className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                        />
-                      </div>
-                    </div>
 
-                    {/* Tanggal Pengisian */}
-                    <div className="w-full mt-4 md:mt-0 md:w-1/2">
-                      <label
-                        htmlFor="tanggalPengisian"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="inline-flex items-center gap-1 mb-2"
-                        >
-                          <span
-                            style={{
-                              color: "var(--modal-text-color)",
-                            }}
-                            className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                          >
-                            3
-                          </span>
-                          Tanggal Pengisian
-                        </span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="tanggalPengisian"
-                          type="date"
-                          name="tanggalPengisian"
-                          value={formData.tanggalPengisian}
-                          onChange={handleOnChange}
-                          disabled={isLoading}
-                          className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="periode"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      <span
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                        className="inline-flex items-center gap-1 mb-2"
+                      >
+                        <span
+                          style={{
+                            color: "var(--modal-text-color)",
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                        >
+                          2
+                        </span>
+                        Periode bulanan ( bulan & tahun )
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="periode"
+                        type="month" // 👈 Ganti dari "date" ke "month"
+                        name="periode"
+                        value={formData.periode}
+                        onChange={handleOnChange}
+                        disabled={isLoading}
+                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label
+                      htmlFor="jumlahAssetDinilai"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      <span
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                        className="inline-flex items-center gap-1 mb-2"
+                      >
+                        <span
+                          style={{
+                            color: "var(--modal-text-color)",
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                        >
+                          3
+                        </span>
+                        Jumlah Aset Dinilai (Bulan Ini)
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="jumlahAssetDinilai"
+                        type="number"
+                        name="jumlahAssetDinilai"
+                        placeholder="Masukan jumlah asset dinilai (Bulan Ini)"
+                        value={formData.jumlahAssetDinilai}
+                        onChange={handleOnChange}
+                        disabled={isLoading}
+                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label
+                      htmlFor="nilaiAssetWakaf"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -301,16 +304,16 @@ export const ModalCreate = ({ checkFetchData }) => {
                         >
                           4
                         </span>
-                        Jumlah Aset Dinilai (Bulan Ini)
+                        Nilai Asset Wakaf ( Currency )
                       </span>
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
-                        type="text"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        id="nilaiAssetWakaf"
+                        type="number"
+                        name="nilaiAssetWakaf"
+                        placeholder="Masukan nilai asset wakaf ( Currency )"
+                        value={formData.nilaiAssetWakaf}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -323,7 +326,7 @@ export const ModalCreate = ({ checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="catatanPenilaianAsset"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -340,15 +343,15 @@ export const ModalCreate = ({ checkFetchData }) => {
                         >
                           5
                         </span>
-                        Kendala dalam Penilaian Aset
+                        Kendala dalam Penilaian Asset
                       </span>
                     </label>
                     <div className="relative">
                       <textarea
-                        id="documentType"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        id="catatanPenilaianAsset"
+                        name="catatanPenilaianAsset"
+                        placeholder="Masukan catatan/kendala penilaian asset"
+                        value={formData.catatanPenilaianAsset}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         rows={4}
@@ -380,7 +383,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                   <Button
                     type="submit"
                     className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
-                    disabled={isLoading || !formData.documentType.trim()}
+                    disabled={isLoading}
                   >
                     {isLoading ? (
                       <>

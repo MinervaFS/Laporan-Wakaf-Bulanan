@@ -9,13 +9,23 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    documentType: item?.documentType || "",
+    name: item?.name || "",
+    periode: item?.periode || "",
+    jumlahAssetTerdaftar: item?.jumlahAssetTerdaftar || 0,
+    jumlahDokTerkait: item?.jumlahDokTerkait || 0,
+    catatanInventarisasi: item?.catatanInventarisasi || "",
   });
 
   useEffect(() => {
     if (item) {
       setFormData({
-        documentType: item.documentType || "",
+        name: item?.name || "",
+        periode: item?.periode
+          ? new Date(item.periode).toISOString().split("T")[0]
+          : "",
+        jumlahAssetTerdaftar: item?.jumlahAssetTerdaftar || 0,
+        jumlahDokTerkait: item?.jumlahDokTerkait || 0,
+        catatanInventarisasi: item?.catatanInventarisasi || "",
       });
     }
   }, [item]);
@@ -27,7 +37,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const handleModalEditClose = () => {
     if (!isLoading) {
       setIsModalOpen(false);
-      setIsLoading(false);
+      // setFormData({ name: "", periode: "" });
     }
   };
 
@@ -42,19 +52,16 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
-    if (!formData.documentType.trim()) {
-      toast.error("Jenis dokumen tidak boleh kosong");
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/master-data/new-document/${item._id}`, {
+      const res = await fetch(`/api/laporan/inventarisasi/${item.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newDocumentType: formData }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       const responseData = await res.json();
@@ -63,7 +70,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
         throw new Error(responseData.message || "Gagal mengupdate data");
       }
 
-      toast.success("Data dokumen baru berhasil diperbarui");
+      toast.success("Data berhasil diperbarui");
+      handleModalEditClose();
 
       if (checkFetchData && typeof checkFetchData === "function") {
         await checkFetchData();
@@ -154,39 +162,25 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                   }}
                   className="text-xl font-semibold text-gray-800 flex items-center gap-2"
                 >
-                  Edit Inverntarisasi
+                  Edit Informasi Umum
                 </h2>
               </div>
-              {/* <button
-                type="button"
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleModalEditClose}
-                disabled={isLoading}
-                aria-label="Tutup modal"
-              >
-                <BiX size={24} className="text-gray-500" />
-              </button> */}
             </div>
-
             {/* Modal Body */}
             <div className="p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="name"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                        className="inline-flex items-center gap-1 mb-2"
+                        style={{ color: "var(--modal-text-color)" }}
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
                       >
                         <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
+                          style={{ color: "var(--modal-text-color)" }}
                           className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
                         >
                           1
@@ -196,11 +190,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
+                        id="name"
                         type="text"
-                        name="documentType"
-                        placeholder="Masukan dokumen terdigitalisasi"
-                        value={formData.documentType}
+                        name="name"
+                        placeholder="Masukan nama"
+                        value={formData.name}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -210,95 +204,94 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                       />
                     </div>
                   </div>
-                  <div className="mt-4 flex flex-col md:flex-row gap-2">
-                    {/* Periode Laporan */}
-                    <div className="w-full md:w-1/2">
-                      <label
-                        htmlFor="periode"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="inline-flex items-center gap-1 mb-2"
-                        >
-                          <span
-                            style={{
-                              color: "var(--modal-text-color)",
-                            }}
-                            className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                          >
-                            2
-                          </span>
-                          Edit Periode Laporan
-                        </span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="periode"
-                          type="date"
-                          name="periode"
-                          value={formData.periode}
-                          onChange={handleOnChange}
-                          disabled={isLoading}
-                          className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                        />
-                      </div>
-                    </div>
 
-                    {/* Tanggal Pengisian */}
-                    <div className="w-full mt-4 md:mt-0 md:w-1/2">
-                      <label
-                        htmlFor="tanggalPengisian"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="inline-flex items-center gap-1 mb-2"
-                        >
-                          <span
-                            style={{
-                              color: "var(--modal-text-color)",
-                            }}
-                            className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                          >
-                            3
-                          </span>
-                          Edit Tanggal Pengisian
-                        </span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="tanggalPengisian"
-                          type="date"
-                          name="tanggalPengisian"
-                          value={formData.tanggalPengisian}
-                          onChange={handleOnChange}
-                          disabled={isLoading}
-                          className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="periode"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
                         style={{
                           color: "var(--modal-text-color)",
                         }}
-                        className="inline-flex items-center gap-1 mb-2"
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
+                      >
+                        <span
+                          style={{
+                            color: "var(--modal-text-color)",
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                        >
+                          2
+                        </span>
+                        Edit Periode bulanan ( bulan & tahun )
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="periode"
+                        type="month"
+                        name="periode"
+                        value={formData.periode}
+                        onChange={handleOnChange}
+                        disabled={isLoading}
+                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label
+                      htmlFor="jumlahAssetTerdaftar"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      <span
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
+                      >
+                        <span
+                          style={{
+                            color: "var(--modal-text-color)",
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                        >
+                          3
+                        </span>
+                        Edit Jumlah Aset Terdaftar
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="jumlahAssetTerdaftar"
+                        type="number"
+                        name="jumlahAssetTerdaftar"
+                        placeholder="Masukan jumlah asset terdaftar"
+                        value={formData.jumlahAssetTerdaftar}
+                        onChange={handleOnChange}
+                        disabled={isLoading}
+                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label
+                      htmlFor="jumlahDokTerkait"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      <span
+                        style={{
+                          color: "var(--modal-text-color)",
+                        }}
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
                       >
                         <span
                           style={{
@@ -308,16 +301,16 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         >
                           4
                         </span>
-                        Edit Jumlah Aset Terdaftar
+                        Edit Jumlah Dokumen Terkait Aset
                       </span>
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
-                        type="text"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        id="jumlahDokTerkait"
+                        type="number"
+                        name="jumlahDokTerkait"
+                        placeholder="Masukan jumlah dokumen terkait"
+                        value={formData.jumlahDokTerkait}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -327,16 +320,17 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                       />
                     </div>
                   </div>
+
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="catatanInventarisasi"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
                         style={{
                           color: "var(--modal-text-color)",
                         }}
-                        className="inline-flex items-center gap-1 mb-2"
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
                       >
                         <span
                           style={{
@@ -346,53 +340,15 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         >
                           5
                         </span>
-                        Edit Jumlah Dokumen Terkait Aset
-                      </span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="documentType"
-                        type="text"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
-                        onChange={handleOnChange}
-                        disabled={isLoading}
-                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <label
-                      htmlFor="documentType"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                        className="inline-flex items-center gap-1 mb-2"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                        >
-                          6
-                        </span>
                         Edit Kendala dalam Inventarisasi
                       </span>
                     </label>
                     <div className="relative">
                       <textarea
-                        id="documentType"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        id="catatanInventarisasi"
+                        name="catatanInventarisasi"
+                        placeholder="Masukan Kendala dalam Inventarisasi"
+                        value={formData.catatanInventarisasi}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         rows={4}
@@ -423,8 +379,12 @@ export const ModalEdit = ({ item, checkFetchData }) => {
 
                   <Button
                     type="submit"
-                    className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
-                    disabled={isLoading || !formData.documentType.trim()}
+                    className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
+                    disabled={
+                      isLoading ||
+                      !formData.name.trim() ||
+                      !formData.periode.trim()
+                    }
                   >
                     {isLoading ? (
                       <>

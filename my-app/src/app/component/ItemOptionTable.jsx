@@ -21,6 +21,15 @@ export const ItemsOptionDashboardAdmin = ({
       >
         <option
           className="text-black"
+          value={2}
+          style={{
+            color: "var(--sidebar-text)",
+          }}
+        >
+          2
+        </option>
+        <option
+          className="text-black"
           value={5}
           style={{
             color: "var(--sidebar-text)",
@@ -54,6 +63,15 @@ export const ItemsOptionDashboardAdmin = ({
           }}
         >
           20
+        </option>
+        <option
+          className="text-black"
+          value={50}
+          style={{
+            color: "var(--sidebar-text)",
+          }}
+        >
+          50
         </option>
       </select>
     </div>

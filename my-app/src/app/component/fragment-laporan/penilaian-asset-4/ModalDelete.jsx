@@ -22,7 +22,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/master-data/new-document?id=${id}`, {
+      const res = await fetch(`/api/laporan/penilaian-asset-wakaf?id=${id}`, {
         method: "DELETE",
       });
 
@@ -73,6 +73,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
   return (
     <div>
       <BtnDelete openModalDelete={handleModalDeleteOpen} />
+      {/* <ToastContainer position="top-right" autoClose={1000} /> */}
 
       {/* Modal Overlay */}
       {isModalOpen && (
@@ -85,7 +86,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
         >
           {/* Modal Content */}
           <div
-            className=" rounded-xl shadow-2xl w-full max-w-md"
+            className="rounded-xl shadow-2xl w-full max-w-md"
             style={{
               backgroundColor: "var(--modal-bg)",
               border: "3px solid var(--modal-border)",
@@ -119,20 +120,11 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                   style={{
                     color: "var(--modal-text-color)",
                   }}
-                  className="text-xl font-semibold  flex items-center gap-2"
+                  className="text-xl font-semibold flex items-center gap-2"
                 >
-                  Hapus Inventarisasi?
+                  Hapus Data?
                 </h2>
               </div>
-              {/* <button
-                type="button"
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleModalDeleteClose}
-                disabled={isLoading}
-                aria-label="Tutup modal"
-              >
-                <BiX size={24} className="text-gray-500" />
-              </button> */}
             </div>
 
             {/* Modal Body */}
@@ -155,24 +147,24 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                       />
                     </svg>
                   </div>
-                  <div className="flex-1">
+
+                  <div className="flex flex-wrap items-start text-left max-w-md w-full">
                     <h3
-                      className="text-lg font-medium  mb-2"
+                      className="text-lg font-medium mb-2"
                       style={{
                         color: "var(--modal-text-color)",
                       }}
                     >
                       Konfirmasi Penghapusan
                     </h3>
-                    <p
-                      className="text-sm"
-                      style={{
-                        color: "var(--modal-text-color)",
-                      }}
-                    >
-                      Apakah Anda yakin ingin menghapus Inventarisasi ini? Data
-                      yang sudah dihapus tidak dapat dikembalikan.
-                    </p>
+                    <div>
+                      <p
+                        className="text-sm flex-wrap"
+                        style={{ color: "var(--modal-text-color)" }}
+                      >
+                        menghapus informasi umum
+                      </p>
+                    </div>
                   </div>
                 </div>
 

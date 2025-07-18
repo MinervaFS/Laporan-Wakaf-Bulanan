@@ -10,7 +10,8 @@ export const ModalCreate = ({ checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    documentType: "",
+    name: "",
+    periode: "",
   });
 
   const handleOnChange = (e) => {
@@ -28,7 +29,7 @@ export const ModalCreate = ({ checkFetchData }) => {
   const handleModalCreateClose = () => {
     if (!isLoading) {
       setIsModalOpen(false);
-      setFormData({ documentType: "" });
+      setFormData({ name: "", periode: "" });
     }
   };
 
@@ -36,15 +37,15 @@ export const ModalCreate = ({ checkFetchData }) => {
     e.preventDefault();
 
     // Validasi input
-    if (!formData.documentType.trim()) {
-      toast.error("Jenis dokumen tidak boleh kosong");
-      return;
-    }
+    // if (!formData.documentType.trim()) {
+    //   toast.error("Jenis dokumen tidak boleh kosong");
+    //   return;
+    // }
 
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/master-data/new-document", {
+      const res = await fetch("/api/laporan/info-umum", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +57,7 @@ export const ModalCreate = ({ checkFetchData }) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Gagal menyimpan data");
 
-      toast.success("Data berhasil disimpan!");
+      toast.success("Berhasil Menambah Data");
       handleModalCreateClose();
 
       if (checkFetchData && typeof checkFetchData === "function") {
@@ -166,7 +167,7 @@ export const ModalCreate = ({ checkFetchData }) => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label
-                    htmlFor="documentType"
+                    htmlFor="name"
                     className="block text-sm font-medium text-gray-700"
                   >
                     <span
@@ -188,11 +189,11 @@ export const ModalCreate = ({ checkFetchData }) => {
                   </label>
                   <div className="relative">
                     <input
-                      id="documentType"
+                      id="name"
                       type="text"
-                      name="documentType"
+                      name="name"
                       placeholder="Masukan dokumen terdigitalisasi"
-                      value={formData.documentType}
+                      value={formData.name}
                       onChange={handleOnChange}
                       disabled={isLoading}
                       className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -204,7 +205,7 @@ export const ModalCreate = ({ checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="documentType"
+                      htmlFor="periode"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -221,55 +222,15 @@ export const ModalCreate = ({ checkFetchData }) => {
                         >
                           2
                         </span>
-                        Periode Laporan
+                        Periode bulanan ( bulan & tahun )
                       </span>
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
-                        type="date"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
-                        onChange={handleOnChange}
-                        disabled={isLoading}
-                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <label
-                      htmlFor="documentType"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                        className="inline-flex items-center gap-1 mb-2"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                        >
-                          3
-                        </span>
-                        Tanggal Pengisian
-                      </span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="documentType"
-                        type="date"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        id="periode"
+                        type="month" // 👈 Ganti dari "date" ke "month"
+                        name="periode"
+                        value={formData.periode}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -300,7 +261,9 @@ export const ModalCreate = ({ checkFetchData }) => {
                   <Button
                     type="submit"
                     className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
-                    disabled={isLoading || !formData.documentType.trim()}
+                    disabled={
+                      isLoading || !formData.name.trim() || !formData.periode
+                    }
                   >
                     {isLoading ? (
                       <>

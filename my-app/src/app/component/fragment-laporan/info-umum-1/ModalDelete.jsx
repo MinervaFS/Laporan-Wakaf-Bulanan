@@ -20,22 +20,35 @@ export const ModalDelete = ({ id, checkFetchData }) => {
   };
 
   const handleSubmit = async () => {
+    if (!id) {
+      toast.error("ID tidak ditemukan");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/master-data/new-document?id=${id}`, {
+      const res = await fetch(`/api/laporan/info-umum?id=${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
+      const responseData = await res.json();
+      console.log("Response:", responseData);
+
       if (!res.ok) {
-        throw new Error("Gagal menghapus data");
+        throw new Error(responseData.message || "Gagal menghapus data");
       }
 
-      toast.success("Data berhasil dihapus!");
+      toast.success(responseData.message || "Data berhasil dihapus!");
 
-      if (checkFetchData && typeof checkFetchData === "function") {
-        checkFetchData();
-      }
-      handleModalDeleteClose();
+      setTimeout(() => {
+        if (checkFetchData && typeof checkFetchData === "function") {
+          checkFetchData();
+        }
+        handleModalDeleteClose();
+      }, 500); // ⏱️ tunggu toast muncul
     } catch (error) {
       console.error("DELETE ERROR:", error);
       toast.error(error.message || "Terjadi kesalahan saat menghapus");
@@ -61,7 +74,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
 
     if (isModalOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden"; // Prevent background scroll
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
@@ -73,6 +86,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
   return (
     <div>
       <BtnDelete openModalDelete={handleModalDeleteOpen} />
+      {/* <ToastContainer position="top-right" autoClose={1000} /> */}
 
       {/* Modal Overlay */}
       {isModalOpen && (
@@ -85,7 +99,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
         >
           {/* Modal Content */}
           <div
-            className=" rounded-xl shadow-2xl w-full max-w-md"
+            className="rounded-xl shadow-2xl w-full max-w-md"
             style={{
               backgroundColor: "var(--modal-bg)",
               border: "3px solid var(--modal-border)",
@@ -119,20 +133,11 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                   style={{
                     color: "var(--modal-text-color)",
                   }}
-                  className="text-xl font-semibold  flex items-center gap-2"
+                  className="text-xl font-semibold flex items-center gap-2"
                 >
-                  Hapus Informasi Umum?
+                  Hapus Data?
                 </h2>
               </div>
-              {/* <button
-                type="button"
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={handleModalDeleteClose}
-                disabled={isLoading}
-                aria-label="Tutup modal"
-              >
-                <BiX size={24} className="text-gray-500" />
-              </button> */}
             </div>
 
             {/* Modal Body */}
@@ -155,9 +160,9 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                       />
                     </svg>
                   </div>
-                  <div className="flex-1">
+                  {/* <div className="block text-right max-w-md ml-auto">
                     <h3
-                      className="text-lg font-medium  mb-2"
+                      className="text-lg font-medium mb-2"
                       style={{
                         color: "var(--modal-text-color)",
                       }}
@@ -173,6 +178,24 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                       Apakah Anda yakin ingin menghapus informasi umum ini? Data
                       yang sudah dihapus tidak dapat dikembalikan.
                     </p>
+                  </div> */}
+                  <div className="flex flex-wrap items-start text-left max-w-md w-full">
+                    <h3
+                      className="text-lg font-medium mb-2"
+                      style={{
+                        color: "var(--modal-text-color)",
+                      }}
+                    >
+                      Konfirmasi Penghapusan
+                    </h3>
+                    <div>
+                      <p
+                        className="text-sm flex-wrap"
+                        style={{ color: "var(--modal-text-color)" }}
+                      >
+                        menghapus informasi umum
+                      </p>
+                    </div>
                   </div>
                 </div>
 

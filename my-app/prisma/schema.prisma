@@ -101,7 +101,6 @@ model pemanfaatanasset {
   periode                 DateTime
   jumlahAssetDimanfaatkan Int
   jenisPemanfaatan        String
-  persentaseAsset         Int
   createdAt               DateTime @default(now())
 
   userId Int?

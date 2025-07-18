@@ -34,8 +34,9 @@ body[data-theme="light"] {
 
   --Border-Table:  #989898;
   --bg-Table:  #ffffff;
+  --hover-table: #ebebeb;
 
-    --bg-start-index: #ffffff;
+  --bg-start-index: #ffffff;
 
 
   --border-icon: #000000;
@@ -49,10 +50,16 @@ body[data-theme="light"] {
   --modal-text-color: #333333;
   --modal-btn-hover: #e8e8e8;
 
-   --bg-section-login: #f5f5f5;
+  --bg-section-login: #f5f5f5;
   --bg-input-login: #ffffff;
   --bg-input-form-login: #f5f5f5;
   --text-login: #1a1a1a;
+
+    --btn-bg: #e5e7eb; /* gray-200 */
+  --btn-text: #000;
+  --btn-hover: #d1d5db; /* gray-300 */
+  --btn-active-bg: #d1d5db; /* gray-300 */
+  --btn-active-text: #000;
 
 }
 
@@ -70,6 +77,9 @@ body[data-theme="dark"] {
 
   --Border-Table: #2a2a2a;
   --bg-Table:  #1a1a1a;
+  --hover-table: #212121;
+
+
 
   --bg-start-index: #585858;
 
@@ -93,7 +103,14 @@ body[data-theme="dark"] {
   --bg-section-login: #0e0e0e;
   --bg-input-login: #1a1a1a;
   --bg-input-form-login: #2b2b2b;
-  --text-login: #ffffff
+  --text-login: #ffffff;
+
+
+   --btn-bg: #1f2937; /* gray-800 */
+  --btn-text: #fff;
+  --btn-hover: #374151; /* gray-700 */
+  --btn-active-bg: #4b5563; /* gray-600 */
+  --btn-active-text: #fff;
 }
 
 /* Custom Scrollbar */
@@ -148,3 +165,22 @@ body {
   /* font-family: 'Poppins', sans-serif;    */
 }
 
+/* globals.css */
+
+.hover-table:hover {
+  background-color: var(--hover-table);
+}
+
+.my-divider > * + * {
+    border-top: 1px solid var(--Border-Table)
+  }
+
+  /* Default ikon kalender */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+}
+
+/* Saat tema gelap aktif */
+body[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Membuat ikon putih agar terlihat di dark mode */
+}

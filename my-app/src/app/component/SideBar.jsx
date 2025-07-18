@@ -15,7 +15,7 @@ import {
   BiShield,
 } from "react-icons/bi";
 import Link from "next/link";
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -475,7 +475,7 @@ export default function Sidebar() {
               }}
             >
               <span
-                className="text-[14px] logout-icon"
+                className="text-[20px] font-bold uppercase logout-icon"
                 style={{
                   color:
                     active === Datasbtn[Datasbtn.length - 1].path
@@ -487,7 +487,7 @@ export default function Sidebar() {
               </span>
               {!isOpen && (
                 <span
-                  className="ml-4 text-[14px]  tracking-wide logout-text"
+                  className="ml-4 text-[14px] font-medium uppercase tracking-wide logout-text"
                   style={{
                     color:
                       active === Datasbtn[Datasbtn.length - 1].path
@@ -593,8 +593,9 @@ export default function Sidebar() {
                 }}
               >
                 {isLogout ? (
-                  <div>
-                    <Spinner /> Logging out...
+                  <div className="flex-row flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white -transparent"></div>
+                    Logging out...
                   </div>
                 ) : (
                   "Logout"

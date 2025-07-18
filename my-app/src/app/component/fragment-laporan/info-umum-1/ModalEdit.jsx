@@ -9,13 +9,17 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    documentType: item?.documentType || "",
+    name: item?.name || "",
+    periode: item?.periode || "",
   });
 
   useEffect(() => {
     if (item) {
       setFormData({
-        documentType: item.documentType || "",
+        name: item?.name || "",
+        periode: item?.periode
+          ? new Date(item.periode).toISOString().split("T")[0]
+          : "",
       });
     }
   }, [item]);
@@ -27,7 +31,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const handleModalEditClose = () => {
     if (!isLoading) {
       setIsModalOpen(false);
-      setIsLoading(false);
+      // setFormData({ name: "", periode: "" });
     }
   };
 
@@ -42,19 +46,22 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi input
-    if (!formData.documentType.trim()) {
-      toast.error("Jenis dokumen tidak boleh kosong");
-      return;
-    }
+    // // Validasi input
+    // if (!formData.documentType.trim()) {
+    //   toast.error("Jenis dokumen tidak boleh kosong");
+    //   return;
+    // }
 
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/master-data/new-document/${item._id}`, {
+      const res = await fetch(`/api/laporan/info-umum/${item.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newDocumentType: formData }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       const responseData = await res.json();
@@ -63,7 +70,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
         throw new Error(responseData.message || "Gagal mengupdate data");
       }
 
-      toast.success("Data dokumen baru berhasil diperbarui");
+      toast.success("Data berhasil diperbarui");
+      handleModalEditClose();
 
       if (checkFetchData && typeof checkFetchData === "function") {
         await checkFetchData();
@@ -176,15 +184,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                     className="block text-sm font-medium text-gray-700"
                   >
                     <span
-                      style={{
-                        color: "var(--modal-text-color)",
-                      }}
-                      className="inline-flex items-center gap-1 mb-2"
+                      style={{ color: "var(--modal-text-color)" }}
+                      className="flex flex-row items-center gap-1 mb-3 text-left"
                     >
                       <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
+                        style={{ color: "var(--modal-text-color)" }}
                         className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
                       >
                         1
@@ -194,11 +198,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                   </label>
                   <div className="relative">
                     <input
-                      id="documentType"
+                      id="name"
                       type="text"
-                      name="documentType"
+                      name="name"
                       placeholder="Masukan dokumen terdigitalisasi"
-                      value={formData.documentType}
+                      value={formData.name}
                       onChange={handleOnChange}
                       disabled={isLoading}
                       className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -217,7 +221,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         style={{
                           color: "var(--modal-text-color)",
                         }}
-                        className="inline-flex items-center gap-1 mb-2"
+                        className="flex flex-row items-center gap-1 mb-3 text-left"
                       >
                         <span
                           style={{
@@ -232,50 +236,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                     </label>
                     <div className="relative">
                       <input
-                        id="documentType"
-                        type="date"
-                        name="documentType"
+                        id="periode"
+                        type="month"
+                        name="periode"
                         placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
-                        onChange={handleOnChange}
-                        disabled={isLoading}
-                        className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <label
-                      htmlFor="documentType"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      <span
-                        style={{
-                          color: "var(--modal-text-color)",
-                        }}
-                        className="inline-flex items-center gap-1 mb-2"
-                      >
-                        <span
-                          style={{
-                            color: "var(--modal-text-color)",
-                          }}
-                          className="flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
-                        >
-                          3
-                        </span>
-                        Edit Tanggal Pengisian
-                      </span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="documentType"
-                        type="date"
-                        name="documentType"
-                        placeholder="Masukan total dokumen digital"
-                        value={formData.documentType}
+                        value={formData.periode}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -306,7 +271,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                   <Button
                     type="submit"
                     className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[120px] justify-center"
-                    disabled={isLoading || !formData.documentType.trim()}
+                    disabled={
+                      isLoading ||
+                      !formData.name.trim() ||
+                      !formData.periode.trim()
+                    }
                   >
                     {isLoading ? (
                       <>

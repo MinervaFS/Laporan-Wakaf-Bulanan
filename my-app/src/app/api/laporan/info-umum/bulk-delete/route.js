@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../../lib/prisma";
+import { prisma } from "../../../../../../lib/prisma";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
@@ -13,7 +13,7 @@ export async function DELETE(req) {
     }
 
     const decode = jwt.verify(getToken.value, process.env.SECRET_TOKEN);
-    const role = decode.role;
+    const role = decode.userRole;
     const userId = decode.userId;
 
     const body = await req.json();

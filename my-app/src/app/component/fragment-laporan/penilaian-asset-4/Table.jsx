@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { ItemsOptionDashboardAdmin } from "../../ItemOptionTable";
 import {
+  BiChevronLeft,
   BiChevronRight,
   BiFilter,
   BiSolidFilterAlt,
@@ -28,6 +29,7 @@ import { SearchInput } from "../../SearchInput";
 import { ModalEdit } from "./ModalEdit";
 import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const TablePenilaianAsset = ({ data, onFetchData }) => {
@@ -107,8 +109,40 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
     if (searchValue && searchValue.trim() !== "") {
       filtered = filtered.filter(
         (item) =>
-          item.documentType &&
-          item.documentType.toLowerCase().includes(searchValue.toLowerCase())
+          (item.name &&
+            item.name.toLowerCase().includes(searchValue.toLowerCase())) ||
+          (item.periode &&
+            new Date(item.periode)
+              .toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())) ||
+          (item.createdAt &&
+            new Date(item.createdAt)
+              .toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())) ||
+          (item.jumlahAssetDinilai &&
+            item.jumlahAssetDinilai
+              .toString()
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())) ||
+          (item.nilaiAssetWakaf &&
+            item.nilaiAssetWakaf
+              .toString()
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())) ||
+          (item.catatanPenilaianAsset &&
+            item.catatanPenilaianAsset
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()))
       );
     }
 
@@ -184,7 +218,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       const allIds = (filteredData || [])
-        .map((item) => item._id)
+        .map((item) => item.id)
         .filter(Boolean);
       setSelectedIds(allIds);
     } else {
@@ -201,35 +235,34 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
   const isSelected = (id) => selectedIds.includes(id);
   const isAllSelected =
     filteredData?.length > 0 &&
-    filteredData.every((item) => selectedIds.includes(item._id));
+    filteredData.every((item) => selectedIds.includes(item.id));
 
   // Function to generate compact pagination array
   const getPaginationArray = () => {
-    if (totalPages <= 5) {
+    if (totalPages <= 3) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    let pages = [1];
-    const leftSide = Math.max(2, currentPage - 1);
-    const rightSide = Math.min(totalPages - 1, currentPage + 1);
+    const pages = [1];
 
-    if (leftSide > 2) {
+    if (currentPage > 2 && currentPage < totalPages - 1) {
+      pages.push("...");
+      pages.push(currentPage);
+      pages.push("...");
+    } else if (currentPage === 2) {
+      pages.push(2);
+      pages.push("...");
+    } else if (currentPage === totalPages - 1) {
+      pages.push("...");
+      pages.push(totalPages - 1);
+    } else {
       pages.push("...");
     }
 
-    for (let i = leftSide; i <= rightSide; i++) {
-      pages.push(i);
-    }
+    pages.push(totalPages);
 
-    if (rightSide < totalPages - 1) {
-      pages.push("...");
-    }
-
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-    return pages;
+    // Pastikan tidak duplikat
+    return [...new Set(pages)];
   };
 
   // Open bulk delete modal
@@ -246,12 +279,14 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
   const handleConfirmBulkDelete = async () => {
     setIsLoading(true);
     try {
-      // Updated API endpoint to match asset data
-      const res = await fetch("/api/master-data/new-document/bulk-delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: selectedIds }),
-      });
+      const res = await fetch(
+        "/api/laporan/penilaian-asset-wakaf/bulk-delete",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: selectedIds }),
+        }
+      );
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -266,7 +301,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
       // Tunggu sedikit waktu untuk memastikan server selesai memproses
       try {
         await onFetchData();
-        toast.success(`${deletedIds.length} data berhasil dihapus!`);
+        toast.success(`${deletedIds.length} data berhasil dihapus`);
       } catch (fetchError) {
         console.error("Error fetching data after delete:", fetchError);
         toast.error(
@@ -274,7 +309,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
         );
         // Fallback - update filteredData secara manual
         setFilteredData((prevData) =>
-          prevData.filter((item) => !deletedIds.includes(item._id))
+          prevData.filter((item) => !deletedIds.includes(item.id))
         );
       }
     } catch (err) {
@@ -306,7 +341,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
-      doc.text("Data Laporan Dokumen", 14, 15);
+      doc.text("Data Laporan Inventarisasi", 14, 15);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.text(`Tanggal: ${dateStr}`, 14, 22);
@@ -324,7 +359,13 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
       // Data untuk tabel
       const tableBody = filteredData.map((item, index) => [
         index + 1,
-        item.documentType || "-",
+        item.name || "-",
+        item.periode
+          ? new Date(item.periode).toLocaleDateString("id-ID", {
+              month: "long",
+              year: "numeric",
+            })
+          : "-",
         item.createdAt
           ? new Date(item.createdAt).toLocaleDateString("id-ID", {
               day: "2-digit",
@@ -332,6 +373,9 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
               year: "numeric",
             })
           : "-",
+        item.jumlahAssetDinilai || 0,
+        item.nilaiAssetWakaf || 0,
+        item.catatanPenilaianAsset || "-",
         item.user?.role
           ? item.user.role
               .toLowerCase()
@@ -345,7 +389,16 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
       autoTable(doc, {
         startY: filterText ? 32 : 27,
         head: [
-          ["No", "Jenis Pemanfaatan Asset", "Dibuat Oleh", "Tanggal Dibuat"],
+          [
+            "No",
+            "Nama",
+            "Periode",
+            "Tanggal",
+            "Jumlah Penilaian Asset (Bulan ini)",
+            "Jumlah Nilai Asset (Currency)",
+            "catatan Penilaian Asset",
+            "Dibuat Oleh",
+          ],
         ],
         body: tableBody,
         theme: "striped",
@@ -465,7 +518,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
 
           <select
             onChange={handleMenu}
-            className="search-input w-full pl-5 py-2 text-center md:text-left rounded-xl text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
+            className="search-input w-full pl-5 py-2 text-left md:text-left rounded-xl text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
             style={{
               backgroundColor: "var(--bg-Table)",
               border: "2px solid var(--sidebar-border)",
@@ -491,7 +544,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
       <div className="flex flex-col  md:flex-row md:justify-between md:items-center my-5 gap-4">
         {/* Kiri: Tombol Hapus dan PDF */}
         <div className="flex flex-col-reverse sm:flex-row gap-2">
-          {selectedIds > 0 && (
+          {selectedIds.length > 0 && (
             <Button
               className="flex items-center bg-red-500 text-white hover:bg-red-600"
               onClick={handleBulkDeleteClick}
@@ -616,7 +669,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                       onChange={(e) => setStartDate(e.target.value)}
                       className="w-full py-3 px-4 pr-12 border rounded-xl shadow-sm
                              focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                             transition-all duration-200"
+                             transition-all duration-200 text-[var(--text-icon)]"
                       disabled={isLoading}
                     />
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -777,7 +830,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
             className="relative rounded-xl shadow-2xl max-w-md w-full mx-4 animate-in zoom-in-95 fade-in duration-200"
           >
             {/* Header */}
-            <div className="flex flex-col items-center gap-4 px-6 pt-8 pb-6 text-center">
+            <div className="flex flex-col items-center gap-4 px-6 pt-8 pb-6 text-left">
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
                 <FaExclamationTriangle className="text-red-500 text-3xl" />
               </div>
@@ -929,7 +982,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                 //   // color: "var(--sidebar-text)",
               }}
             >
-              <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 <div className="flex items-center justify-center">
                   <Checkbox
                     color="blue"
@@ -948,17 +1001,17 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
               <th className="px-6 py-3 text-left whitespace-nowrap text-xs font-bold uppercase tracking-wider">
                 Periode Laporan
               </th>
-              <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Tanggal Dibuat
+              <th className="px-6 py-3 text-left whitespace-nowrap text-xs font-bold uppercase tracking-wider">
+                Tanggal
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jumlah Aset Dinilai (Bulan Ini)
+                Jumlah Aset Terdaftar
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Nilai Total Aset Wakaf
+                Jumlah Dokumen Terkait Aset
               </th>
-              <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Kendala dalam Penilaian Aset
+              <th className="whitespace-nowrap px-6 py-3 text-left text-xs font-bold  uppercase tracking-wider">
+                Kendala dalam Inventarisasi
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Action
@@ -973,21 +1026,19 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
               backgroundColor: "var(--bg-Table)",
               color: "var(--sidebar-text)",
             }}
-            className={`divide-y divide-gray-200 ${
-              isLoading ? "opacity-50" : ""
-            }`}
+            className={`my-divider  ${isLoading ? "opacity-50" : ""}`}
           >
             {currenDataPages.length > 0 ? (
               currenDataPages.map((item, index) => (
                 <tr
-                  key={item._id || index}
-                  className="hover:bg-gray-100 transition-colors ease-in-out duration-150"
+                  key={item.id || index}
+                  className="hover-table transition-colors ease-in-out duration-150"
                 >
-                  <td className="px-6 text-center py-4 whitespace-nowrap">
+                  <td className="px-6 text-left py-4 whitespace-nowrap">
                     <Checkbox
-                      color="blue"
-                      checked={isSelected(item._id)}
-                      onChange={() => handleSelectItem(item._id)}
+                      className="text-blue-500 checked:bg-blue-500 checked:border-blue-500"
+                      checked={isSelected(item.id)}
+                      onChange={() => handleSelectItem(item.id)}
                       disabled={isLoading}
                     />
                   </td>
@@ -997,16 +1048,17 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                   </td>
 
                   <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
-                    {item.nama || <span className="font-bold text-xl">-</span>}
+                    {item.name || <span className="font-bold text-xl">-</span>}
                   </td>
 
                   <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
-                    {item.periodeLaporan || (
-                      <span className="font-bold text-xl">-</span>
-                    )}
+                    {new Date(item.periode).toLocaleDateString("id-ID", {
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </td>
 
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                  <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
                     {new Date(item.createdAt).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
@@ -1015,14 +1067,32 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                   </td>
 
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                    {item.jumlahAssetDinilai || (
+                      <span className="font-bold text-xl">-</span>
+                    )}
+                  </td>
+
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                    {item.nilaiAssetWakaf || (
+                      <span className="font-bold text-xl">-</span>
+                    )}
+                  </td>
+
+                  <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
+                    {item.catatanPenilaianAsset || (
+                      <span className="font-bold text-xl">-</span>
+                    )}
+                  </td>
+
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <div className="flex justify-center gap-2 items-center">
                       <ModalEdit item={item} checkFetchData={onFetchData} />
-                      <ModalDelete id={item._id} checkFetchData={onFetchData} />
+                      <ModalDelete id={item.id} checkFetchData={onFetchData} />
                     </div>
                   </td>
 
                   <td className="px-6 text-center py-4 whitespace-nowrap text-sm">
-                    <span className="font-bold text-green-600 px-4 py-2 bg-green-100 border border-green-500 rounded-full">
+                    <span className="font-bold text-green-600 italic rounded-full">
                       {item.user?.role
                         ? item.user.role
                             .toLowerCase()
@@ -1040,7 +1110,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
             ) : (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="10"
                   className="px-6 py-4 text-center text-sm text-gray-500"
                 >
                   {isLoading ? "Memuat data..." : "Data tidak ada"}
@@ -1072,7 +1142,9 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
               border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
             }}
           >
-            Prev
+            <span className="text-lg">
+              <BiChevronLeft />
+            </span>
           </Button>
 
           <div className="flex space-x-1 mx-2">
@@ -1080,11 +1152,25 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
               <Button
                 key={index}
                 size="sm"
-                className={
-                  currentPage === page
-                    ? "bg-black text-white py-2 px-3 text-xs"
-                    : "bg-gray-200 text-black py-2 px-3 text-xs hover:bg-gray-300"
-                }
+                className="py-2 px-3 text-xs"
+                style={{
+                  backgroundColor:
+                    currentPage === page
+                      ? "var(--btn-active-bg)"
+                      : "var(--btn-bg)",
+                  color:
+                    currentPage === page
+                      ? "var(--btn-active-text)"
+                      : "var(--btn-text)",
+                }}
+                onMouseEnter={(e) => {
+                  if (currentPage !== page)
+                    e.currentTarget.style.backgroundColor = "var(--btn-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  if (currentPage !== page)
+                    e.currentTarget.style.backgroundColor = "var(--btn-bg)";
+                }}
                 onClick={() =>
                   typeof page === "number" && handleClickPage(page)
                 }
@@ -1104,10 +1190,12 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
             style={{
               backgroundColor: "var(--bg-Table)",
               color: "var(--sidebar-text)",
-              border: "2px solid var(--sidebar-border)", // ⬅️ langsung pakai border
+              border: "2px solid var(--sidebar-border)",
             }}
           >
-            Next
+            <span className="text-lg">
+              <BiChevronRight />
+            </span>
           </Button>
         </div>
       </div>

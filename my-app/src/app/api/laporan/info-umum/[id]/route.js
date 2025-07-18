@@ -4,14 +4,15 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
+// Validasi schema
 const infoUmumSchema = z.object({
-  name: z.string().min(1, "Nama wajib diisi"),
-  periode: z.date({ required_error: "Periode wajib diisi" }),
+  name: z.string().optional(),
+  periode: z.coerce.date().optional(), // ← pakai coerce agar string -> Date
 });
 
-export async function PUT(req, { params }) {
+export async function PUT(req, context) {
   try {
-    const cookieStore = await cookies();
+    const cookieStore = cookies();
     const getToken = cookieStore.get("token");
 
     if (!getToken) {
@@ -19,13 +20,17 @@ export async function PUT(req, { params }) {
     }
 
     const decode = jwt.verify(getToken.value, process.env.SECRET_TOKEN);
-    const role = decode.role;
+    const role = decode.userRole;
     const userId = decode.userId;
 
+    const { params } = context;
     const id = parseInt(params.id);
+
+    // Ambil dan validasi body
     const body = await req.json();
     const parsed = infoUmumSchema.parse(body);
 
+    // Cari data existing
     const existing = await prisma.infoumum.findUnique({
       where: { id },
     });
@@ -37,6 +42,7 @@ export async function PUT(req, { params }) {
       );
     }
 
+    // Hanya admin atau pemilik data yang boleh edit
     if (role !== "admin" && existing.userId !== userId) {
       return NextResponse.json(
         { message: "Anda tidak punya izin untuk mengedit data ini" },
@@ -44,6 +50,7 @@ export async function PUT(req, { params }) {
       );
     }
 
+    // Update data
     const updated = await prisma.infoumum.update({
       where: { id },
       data: {
