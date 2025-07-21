@@ -30,7 +30,7 @@ import { ModalEdit } from "./ModalEdit";
 import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import { useRouter } from "next/navigation";
-import { MenuReport } from "../../MenuPage";
+import { MenuPage, MenuReport } from "../../MenuPage";
 
 export const TableDigitalisasi = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -432,73 +432,10 @@ export const TableDigitalisasi = ({ data, onFetchData }) => {
     }
   };
 
-  const menuLaporan = [
-    {
-      id: 1,
-      title: "Menu Informasi Umum",
-      path: "/dashboard/laporan/info-umum",
-    },
-    {
-      id: 2,
-      title: "Menu Inventarisasi",
-      path: "/dashboard/laporan/inventarisasi",
-    },
-    {
-      id: 3,
-      title: "Menu Digitalisasi",
-      path: "/dashboard/laporan/digitalisasi",
-    },
-    {
-      id: 4,
-      title: "Menu Penilaian Asset",
-      path: "/dashboard/laporan/penilaian-asset",
-    },
-    {
-      id: 5,
-      title: "Menu Pengelolaan",
-      path: "/dashboard/laporan/pengelolaan",
-    },
-    {
-      id: 6,
-      title: "Menu Pemanfaatan",
-      path: "/dashboard/laporan/pemanfaatan",
-    },
-    {
-      id: 7,
-      title: "Menu Kapasitas SDM",
-      path: "/dashboard/laporan/kapasitas-sdm",
-    },
-    {
-      id: 8,
-      title: "Menu Sistem IT",
-      path: "/dashboard/laporan/sistem-it",
-    },
-    {
-      id: 9,
-      title: "Menu Kepatuhan",
-      path: "/dashboard/laporan/kepatuhan",
-    },
-    {
-      id: 10,
-      title: "Menu Pelaporan",
-      path: "/dashboard/laporan/pelaporan",
-    },
-    {
-      id: 11,
-      title: "Menu Risiko",
-      path: "/dashboard/laporan/risiko",
-    },
-    {
-      id: 12,
-      title: "Menu Rangkuman",
-      path: "/dashboard/laporan/rangkuman",
-    },
-  ];
-
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>

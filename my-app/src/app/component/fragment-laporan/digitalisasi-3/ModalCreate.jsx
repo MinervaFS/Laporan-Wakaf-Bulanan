@@ -233,7 +233,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                     <div className="relative">
                       <input
                         id="periode"
-                        type="month" // 👈 Ganti dari "date" ke "month"
+                        type="month"
                         name="periode"
                         value={formData.periode}
                         onChange={handleOnChange}

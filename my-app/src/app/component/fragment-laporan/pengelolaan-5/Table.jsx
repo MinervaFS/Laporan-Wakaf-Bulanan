@@ -31,7 +31,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MenuReport } from "../../MenuPage";
+import { MenuPage, MenuReport } from "../../MenuPage";
 
 export const TablePengelolaan = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -433,7 +433,7 @@ export const TablePengelolaan = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>
@@ -972,7 +972,12 @@ export const TablePengelolaan = ({ data, onFetchData }) => {
                   </td>
 
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
-                    {item.penghasialAsset || (
+                    {item.penghasialAsset ? (
+                      <span>
+                        Rp.{" "}
+                        {Number(item.penghasialAsset).toLocaleString("id-ID")}
+                      </span>
+                    ) : (
                       <span className="font-bold text-xl">-</span>
                     )}
                   </td>

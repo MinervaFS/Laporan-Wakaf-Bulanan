@@ -31,7 +31,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MenuReport } from "../../MenuPage";
+import { MenuPage, MenuReport } from "../../MenuPage";
 
 export const TablePemanfaatan = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -423,7 +423,7 @@ export const TablePemanfaatan = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>
@@ -893,7 +893,7 @@ export const TablePemanfaatan = ({ data, onFetchData }) => {
                 Tanggal
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jumlah Asset Dimanfaatkan{" "}
+                Jumlah Asset Dimanfaatkan
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-left text-xs font-bold  uppercase tracking-wider">
                 Jenis Pemanfaatan

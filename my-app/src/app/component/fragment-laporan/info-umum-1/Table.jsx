@@ -30,7 +30,7 @@ import { ModalEdit } from "./ModalEdit";
 import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import { useRouter } from "next/navigation";
-import { MenuReport } from "../../MenuPage";
+import { MenuPage, MenuReport } from "../../MenuPage";
 
 export const TableInfoUmum = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -402,7 +402,7 @@ export const TableInfoUmum = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>

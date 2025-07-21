@@ -110,26 +110,26 @@ export default function Navbar() {
     },
   ];
 
-  const dropdownItems = [
-    // {
-    //   id: 1,
-    //   title: "Buat Jenis Asset",
-    //   path: "/dashboard/dropdown-data/jenis-asset",
-    //   icon: <BiFolder />,
-    // },
-    // {
-    //   id: 2,
-    //   title: "Buat Dokumen Baru",
-    //   path: "/dashboard/dropdown-data/dokumen",
-    //   icon: <BiFile />,
-    // },
-    // {
-    //   id: 3,
-    //   title: "Buat Jenis Resiko",
-    //   path: "/dashboard/dropdown-data/jenis-resiko",
-    //   icon: <BiShield />,
-    // },
-  ];
+  // const dropdownItems = [
+  //   // {
+  //   //   id: 1,
+  //   //   title: "Buat Jenis Asset",
+  //   //   path: "/dashboard/dropdown-data/jenis-asset",
+  //   //   icon: <BiFolder />,
+  //   // },
+  //   // {
+  //   //   id: 2,
+  //   //   title: "Buat Dokumen Baru",
+  //   //   path: "/dashboard/dropdown-data/dokumen",
+  //   //   icon: <BiFile />,
+  //   // },
+  //   // {
+  //   //   id: 3,
+  //   //   title: "Buat Jenis Resiko",
+  //   //   path: "/dashboard/dropdown-data/jenis-resiko",
+  //   //   icon: <BiShield />,
+  //   // },
+  // ];
 
   return (
     <main>
@@ -268,7 +268,7 @@ export default function Navbar() {
             </Link>
 
             {/* Dropdown Menu Item - Buat Kategori */}
-            <li className=" border-gray-300">
+            {/* <li className=" border-gray-300">
               <div
                 onClick={toggleDropdown}
                 className="p-5 hover:bg-gray-50 cursor-pointer duration-300"
@@ -286,7 +286,7 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* Dropdown Items */}
+              {/* Dropdown Items //
               {isDropdownOpen && (
                 <div className="bg-gray-50 border-t ">
                   {dropdownItems.map((item) => (
@@ -303,7 +303,7 @@ export default function Navbar() {
                   ))}
                 </div>
               )}
-            </li>
+            </li> */}
 
             {/* Rest of nav items (excluding Dashboard) */}
             {navItems.slice(1).map((item) => (

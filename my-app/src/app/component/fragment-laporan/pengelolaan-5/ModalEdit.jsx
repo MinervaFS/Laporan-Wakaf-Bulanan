@@ -11,8 +11,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const [formData, setFormData] = useState({
     name: item?.name || "",
     periode: item?.periode || "",
-    jumlahAssetTerdaftar: item?.jumlahAssetTerdaftar || 0,
-    jumlahDokTerkait: item?.jumlahDokTerkait || 0,
+    jumlahAssetDikelola: item?.jumlahAssetDikelola || 0,
+    penghasialAsset: item?.penghasialAsset || 0,
     jenisPengelolaanBaru: item?.jenisPengelolaanBaru || "",
   });
 
@@ -23,8 +23,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
         periode: item?.periode
           ? new Date(item.periode).toISOString().split("T")[0]
           : "",
-        jumlahAssetTerdaftar: item?.jumlahAssetTerdaftar || 0,
-        jumlahDokTerkait: item?.jumlahDokTerkait || 0,
+        jumlahAssetDikelola: item?.jumlahAssetDikelola || 0,
+        penghasialAsset: item?.penghasialAsset || 0,
         jenisPengelolaanBaru: item?.jenisPengelolaanBaru || "",
       });
     }
@@ -40,8 +40,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
       setFormData({
         name: item?.name || "",
         periode: item?.periode || "",
-        jumlahAssetTerdaftar: item?.jumlahAssetTerdaftar || 0,
-        jumlahDokTerkait: item?.jumlahDokTerkait || 0,
+        jumlahAssetDikelola: item?.jumlahAssetDikelola || 0,
+        penghasialAsset: item?.penghasialAsset || 0,
         jenisPengelolaanBaru: item?.jenisPengelolaanBaru || "",
       });
     }
@@ -251,7 +251,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="jumlahAssetTerdaftar"
+                      htmlFor="jumlahAssetDikelola"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -290,7 +290,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="jumlahDokTerkait"
+                      htmlFor="penghasialAsset"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -312,11 +312,11 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                     </label>
                     <div className="relative">
                       <input
-                        id="jumlahDokTerkait"
+                        id="penghasialAsset"
                         type="number"
-                        name="jumlahDokTerkait"
+                        name="penghasialAsset"
                         placeholder="Masukan penghasilan asset"
-                        value={formData.jumlahDokTerkait}
+                        value={formData.penghasialAsset}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"

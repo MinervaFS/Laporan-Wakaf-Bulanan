@@ -29,6 +29,7 @@ import { SearchInput } from "../../SearchInput";
 import { ModalEdit } from "./ModalEdit";
 import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
+import { MenuPage } from "../../MenuPage";
 import { useRouter } from "next/navigation";
 
 export const TableKepatuhan = ({ data, onFetchData }) => {
@@ -430,7 +431,7 @@ export const TableKepatuhan = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>

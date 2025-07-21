@@ -31,7 +31,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MenuReport } from "../../MenuPage";
+import { MenuPage, MenuReport } from "../../MenuPage";
 
 export const TablePenilaianAsset = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -436,7 +436,7 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <MenuReport />
+        <MenuPage />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>
@@ -906,13 +906,13 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                 Tanggal
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jumlah Aset Terdaftar
+                Jumlah Asset Dinilai
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jumlah Dokumen Terkait Aset
+                Nilai Total Asset Wakaf
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-left text-xs font-bold  uppercase tracking-wider">
-                Kendala dalam Inventarisasi
+                Kendala Penilaian Asset
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Action
@@ -974,7 +974,12 @@ export const TablePenilaianAsset = ({ data, onFetchData }) => {
                   </td>
 
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
-                    {item.nilaiAssetWakaf || (
+                    {item.nilaiAssetWakaf ? (
+                      <span>
+                        Rp.{" "}
+                        {Number(item.nilaiAssetWakaf).toLocaleString("id-ID")}
+                      </span>
+                    ) : (
                       <span className="font-bold text-xl">-</span>
                     )}
                   </td>

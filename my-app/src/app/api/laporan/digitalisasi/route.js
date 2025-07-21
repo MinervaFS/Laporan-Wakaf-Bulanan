@@ -149,8 +149,6 @@ export async function GET() {
     const role = decode.userRole;
     const userId = decode.userId;
 
-    console.log("Token decoded:", decode);
-
     let getdigitalisasidok;
 
     if (role === "admin") {
