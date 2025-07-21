@@ -30,6 +30,7 @@ import { ModalEdit } from "./ModalEdit";
 import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import { useRouter } from "next/navigation";
+import { MenuReport } from "../../MenuPage";
 
 export const TableDigitalisasi = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,16 +48,6 @@ export const TableDigitalisasi = ({ data, onFetchData }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateFilter, setShowDateFilter] = useState(false);
-
-  // pindah menu laporan
-  const router = useRouter();
-
-  const handleMenu = (e) => {
-    const selectedMenu = e.target.value;
-    if (selectedMenu) {
-      router.push(selectedMenu);
-    }
-  };
 
   useEffect(() => {
     setFilteredData(data);
@@ -507,34 +498,7 @@ export const TableDigitalisasi = ({ data, onFetchData }) => {
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <div className="w-full sm:w-auto">
-          <label
-            style={{ color: "var( --text-title)" }}
-            className="block text-md font-medium mb-2"
-          >
-            <span className="font-bold">Pilih Menu Laporan :</span>
-          </label>
-
-          <select
-            onChange={handleMenu}
-            className="search-input w-full pl-5 py-2 text-center md:text-left rounded-xl text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
-            style={{
-              backgroundColor: "var(--bg-Table)",
-              border: "2px solid var(--sidebar-border)",
-            }}
-            defaultValue=""
-          >
-            <option value="" disabled hidden>
-              Pilih Menu Laporan
-            </option>
-
-            {menuLaporan.map((item) => (
-              <option key={item.id} value={item.path}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        </div>
+        <MenuReport />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>

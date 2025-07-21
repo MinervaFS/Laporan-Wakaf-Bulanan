@@ -58,7 +58,7 @@ export default function MenuLaporan() {
     {
       id: 11,
       title: "Risiko",
-      path: "/dashboard/laporan/risiko",
+      path: "/dashboard/laporan/resiko",
     },
     {
       id: 12,

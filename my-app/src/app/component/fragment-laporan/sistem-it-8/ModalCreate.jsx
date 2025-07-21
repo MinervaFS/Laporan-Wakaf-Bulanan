@@ -183,7 +183,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                         >
                           1
                         </span>
-                        Nama Pelapor
+                        Nama
                       </span>
                     </label>
                     <div className="relative">
@@ -267,7 +267,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                       <textarea
                         id="pengemabanganSistem"
                         name="pengemabanganSistem"
-                        placeholder="Masukan pengembangan sistem"
+                        placeholder="Masukan pengembangan sistem IT"
                         value={formData.pengemabanganSistem}
                         onChange={handleOnChange}
                         disabled={isLoading}

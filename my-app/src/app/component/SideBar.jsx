@@ -124,7 +124,7 @@ export default function Sidebar() {
           color: "var(--sidebar-text)",
         }}
         className={`fixed left-0 max-w-[720px] min-h-screen ${
-          isOpen ? "w-[80px]" : "w-[330px]"
+          isOpen ? "w-[80px]" : "w-[305px]"
         }`}
       >
         <div className="mt-[80px] flex flex-col h-[calc(100vh-80px)]">
@@ -594,8 +594,8 @@ export default function Sidebar() {
               >
                 {isLogout ? (
                   <div className="flex-row flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white -transparent"></div>
-                    Logging out...
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 mr-2 border-white bg-transparent"></div>
+                    Logout ...
                   </div>
                 ) : (
                   "Logout"
@@ -618,7 +618,7 @@ const Datasbtn = [
   },
   {
     id: 2,
-    title: "Buat Lapooran",
+    title: "Buat Laporan",
     path: "/dashboard/laporan",
     icon: <BiDuplicate />,
   },

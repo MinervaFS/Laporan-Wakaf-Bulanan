@@ -5,7 +5,6 @@ const secretToken = process.env.SECRET_TOKEN;
 
 export async function POST(req) {
   try {
-    // Get token from cookies
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
@@ -15,11 +14,9 @@ export async function POST(req) {
       );
     }
 
-    // Verify token (optional - to make sure it's valid before logout)
     try {
       jwt.verify(token, secretToken);
     } catch (error) {
-      // Token invalid, but we still want to clear the cookie
       console.log("Invalid token during logout:", error.message);
     }
 

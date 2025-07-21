@@ -124,7 +124,7 @@ model pengelolaanresiko {
   id             Int      @id @default(autoincrement())
   name           String
   periode        DateTime
-  ResikoBary     String
+  ResikoBaru     String
   mitigasiResiko String
   statusResiko   String
   createdAt      DateTime @default(now())

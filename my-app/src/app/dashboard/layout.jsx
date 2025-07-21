@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }) {
       </header>
       <div className="flex flex-1 relative">
         {/* Fixed width sidebar */}
-        <aside className="hidden w-[333px] xl:block bg-transparent flex-shrink-0">
+        <aside className="hidden w-[305px] xl:block bg-transparent flex-shrink-0">
           <Sidebar />
         </aside>
 

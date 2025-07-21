@@ -2,6 +2,7 @@
 import { TablePelaporan } from "@/app/component/fragment-laporan/pelaporan-10/Table";
 import { useState, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
+import { ToastContainer } from "react-toastify";
 
 export default function Pelaporan() {
   const [data, setData] = useState([]);
@@ -9,7 +10,7 @@ export default function Pelaporan() {
 
   const fetchingData = async () => {
     try {
-      const res = await fetch("/api/laporan/pemanfaatan-asset");
+      const res = await fetch("/api/laporan/pelaporan");
       if (!res.ok) {
         throw new Error("gagal mengambil data");
       }
@@ -36,6 +37,7 @@ export default function Pelaporan() {
   }
   return (
     <div className="flex flex-col items-start p-5 space-y-3">
+      <ToastContainer />
       <h2
         className="flex text-xl font-bold items-center "
         style={{ color: "var(--text-sub-title)" }}

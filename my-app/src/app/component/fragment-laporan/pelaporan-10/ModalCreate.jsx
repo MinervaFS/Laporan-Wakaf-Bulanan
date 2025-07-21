@@ -46,7 +46,7 @@ export const ModalCreate = ({ checkFetchData }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/laporan/pemanfaatan-asset", {
+      const res = await fetch("/api/laporan/pelaporan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -262,7 +262,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                         id="jumlahLaporanPublik"
                         type="number"
                         name="jumlahLaporanPublik"
-                        placeholder="Masukan jumlah asset dimanfaatkan"
+                        placeholder="Masukan jumlah laporan publik"
                         value={formData.jumlahLaporanPublik}
                         onChange={handleOnChange}
                         disabled={isLoading}

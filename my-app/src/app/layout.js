@@ -1,6 +1,6 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
 // Font Google Poppins
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body data-theme="light" className={`${poppins.variable} antialiased`}>
         {children}
-        <ToastContainer />
+        {/* <ToastContainer /> */}
       </body>
     </html>
   );

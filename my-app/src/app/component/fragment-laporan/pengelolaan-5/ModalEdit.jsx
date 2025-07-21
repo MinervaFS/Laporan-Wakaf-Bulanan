@@ -191,7 +191,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         >
                           1
                         </span>
-                        Edit Nama Pelapor
+                        Edit Nama
                       </span>
                     </label>
                     <div className="relative">

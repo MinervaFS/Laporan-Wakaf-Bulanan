@@ -81,7 +81,7 @@ export default function InputLogin() {
       }}
       className="w-full min-h-screen flex items-center justify-center"
     >
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer />
       <div
         style={{
           backgroundColor: "var(--bg-input-login)",

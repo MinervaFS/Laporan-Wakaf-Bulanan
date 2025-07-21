@@ -360,7 +360,7 @@ export default function Navbar() {
                       <div className="animate-spin rounded-full h-4 w-4 border-2 border-white -transparent"></div>
                     </div>
                   ) : (
-                    "Logout"
+                    "Logout ..."
                   )}
                 </Button>
               </div>

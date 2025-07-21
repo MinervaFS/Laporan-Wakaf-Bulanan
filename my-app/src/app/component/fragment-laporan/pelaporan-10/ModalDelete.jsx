@@ -27,7 +27,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/laporan/pemanfaatan-asset?id=${id}`, {
+      const res = await fetch(`/api/laporan/pelaporan?id=${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                         className="text-sm flex-wrap"
                         style={{ color: "var(--modal-text-color)" }}
                       >
-                        menghapus pemanfaatan asset
+                        menghapus pelaporan & transparansi publik
                       </p>
                     </div>
                   </div>

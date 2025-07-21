@@ -11,8 +11,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
   const [formData, setFormData] = useState({
     name: item?.name || "",
     periode: item?.periode || "",
-    jumlahAssetDimanfaatkan: item?.jumlahAssetDimanfaatkan || 0,
-    jenisPemanfaatan: item?.jenisPemanfaatan || "",
+    jumlahLaporanPublik: item?.jumlahLaporanPublik || 0,
+    feedback: item?.feedback || "",
   });
 
   useEffect(() => {
@@ -22,8 +22,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
         periode: item?.periode
           ? new Date(item.periode).toISOString().split("T")[0]
           : "",
-        jumlahAssetDimanfaatkan: item?.jumlahAssetDimanfaatkan || 0,
-        jenisPemanfaatan: item?.jenisPemanfaatan || "",
+        jumlahLaporanPublik: item?.jumlahLaporanPublik || 0,
+        feedback: item?.feedback || "",
       });
     }
   }, [item]);
@@ -38,8 +38,8 @@ export const ModalEdit = ({ item, checkFetchData }) => {
       setFormData({
         name: item?.name || "",
         periode: item?.periode || "",
-        jumlahAssetDimanfaatkan: item?.jumlahAssetDimanfaatkan || 0,
-        jenisPemanfaatan: item?.jenisPemanfaatan || "",
+        jumlahLaporanPublik: item?.jumlahLaporanPublik || 0,
+        feedback: item?.feedback || "",
       });
     }
   };
@@ -58,7 +58,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/laporan/pemanfaatan-asset/${item.id}`, {
+      const res = await fetch(`/api/laporan/pelaporan/${item.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -252,7 +252,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="jumlahAssetDimanfaatkan"
+                      htmlFor="jumlahLaporanPublik"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -269,16 +269,16 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         >
                           3
                         </span>
-                        Edit Jumlah Asset Dimanfaatkan
+                        Edit Jumlah Laporan Publik
                       </span>
                     </label>
                     <div className="relative">
                       <input
-                        id="jumlahAssetDimanfaatkan"
+                        id="jumlahLaporanPublik"
                         type="number"
-                        name="jumlahAssetDimanfaatkan"
-                        placeholder="Masukan jumlah asset dimanfaatkan"
-                        value={formData.jumlahAssetDimanfaatkan}
+                        name="jumlahLaporanPublik"
+                        placeholder="Masukan jumlah laporan publik"
+                        value={formData.jumlahLaporanPublik}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         className="w-full rounded-xl px-4 py-3 text-base border-2 border-gray-500 bg-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-400"
@@ -291,7 +291,7 @@ export const ModalEdit = ({ item, checkFetchData }) => {
 
                   <div className="mt-4">
                     <label
-                      htmlFor="jenisPemanfaatan"
+                      htmlFor="feedback"
                       className="block text-sm font-medium text-gray-700"
                     >
                       <span
@@ -308,15 +308,15 @@ export const ModalEdit = ({ item, checkFetchData }) => {
                         >
                           4
                         </span>
-                        Edit Jenis Pemanfaatan
+                        Edit Feedback
                       </span>
                     </label>
                     <div className="relative">
                       <textarea
-                        id="jenisPemanfaatan"
-                        name="jenisPemanfaatan"
-                        placeholder="Masukan jenis pemanfaatan"
-                        value={formData.jenisPemanfaatan}
+                        id="feedback"
+                        name="feedback"
+                        placeholder="Masukan Feedback"
+                        value={formData.feedback}
                         onChange={handleOnChange}
                         disabled={isLoading}
                         rows={4}

@@ -175,7 +175,7 @@ export const ModalDelete = ({ id, checkFetchData }) => {
                         className="text-sm flex-wrap"
                         style={{ color: "var(--modal-text-color)" }}
                       >
-                        menghapus informasi umum
+                        menghapus inventarisasi
                       </p>
                     </div>
                   </div>

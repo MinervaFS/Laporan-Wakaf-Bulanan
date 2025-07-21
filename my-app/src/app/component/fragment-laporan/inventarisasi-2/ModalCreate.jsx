@@ -185,7 +185,7 @@ export const ModalCreate = ({ checkFetchData }) => {
                         >
                           1
                         </span>
-                        Nama Pelapor
+                        Nama
                       </span>
                     </label>
                     <div className="relative">

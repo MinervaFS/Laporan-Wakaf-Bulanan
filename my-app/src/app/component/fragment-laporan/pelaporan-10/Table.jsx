@@ -31,6 +31,7 @@ import { ModalDelete } from "./ModalDelete";
 import { ModalCreate } from "./ModalCreate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { MenuReport } from "../../MenuPage";
 
 export const TablePelaporan = ({ data, onFetchData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,16 +49,6 @@ export const TablePelaporan = ({ data, onFetchData }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showDateFilter, setShowDateFilter] = useState(false);
-
-  // pindah menu laporan
-  const router = useRouter();
-
-  const handleMenu = (e) => {
-    const selectedMenu = e.target.value;
-    if (selectedMenu) {
-      router.push(selectedMenu);
-    }
-  };
 
   useEffect(() => {
     setFilteredData(data);
@@ -129,15 +120,13 @@ export const TablePelaporan = ({ data, onFetchData }) => {
               })
               .toLowerCase()
               .includes(searchValue.toLowerCase())) ||
-          (item.jumlahAssetDimanfaatkan &&
-            item.jumlahAssetDimanfaatkan
+          (item.jumlahLaporanPublik &&
+            item.jumlahLaporanPublik
               .toString()
               .toLowerCase()
               .includes(searchValue.toLowerCase())) ||
-          (item.jenisPemanfaatan &&
-            item.jenisPemanfaatan
-              .toLowerCase()
-              .includes(searchValue.toLowerCase()))
+          (item.feedback &&
+            item.feedback.toLowerCase().includes(searchValue.toLowerCase()))
       );
     }
 
@@ -274,7 +263,7 @@ export const TablePelaporan = ({ data, onFetchData }) => {
   const handleConfirmBulkDelete = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/laporan/pemanfaatan-asset/bulk-delete", {
+      const res = await fetch("/api/laporan/pelaporan/bulk-delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: selectedIds }),
@@ -330,7 +319,7 @@ export const TablePelaporan = ({ data, onFetchData }) => {
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
-      doc.text("Data Laporan Pemanfaatan Asset", 14, 15);
+      doc.text("Data Laporan Pelaporan & Transparansi", 14, 15);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.text(`Tanggal: ${dateStr}`, 14, 22);
@@ -362,8 +351,8 @@ export const TablePelaporan = ({ data, onFetchData }) => {
               year: "numeric",
             })
           : "-",
-        item.jumlahAssetDimanfaatkan || 0,
-        item.jenisPemanfaatan || "-",
+        item.jumlahLaporanPublik || 0,
+        item.feedback || "-",
         item.user?.role
           ? item.user.role
               .toLowerCase()
@@ -382,8 +371,8 @@ export const TablePelaporan = ({ data, onFetchData }) => {
             "Nama",
             "Periode",
             "Tanggal",
-            "Jumlah Asset Dimanfaatkan",
-            "Jenis Pemanfaatan",
+            "Jumlah Pelaporan & Transparansi publik",
+            "Feedback",
             "Dibuat Oleh",
           ],
         ],
@@ -418,7 +407,7 @@ export const TablePelaporan = ({ data, onFetchData }) => {
       }
 
       // Simpan dokumen
-      const fileName = `Laporan_Pemanfaatan-Asset${now
+      const fileName = `Laporan_Pelaporan_Transparasi_${now
         .toISOString()
         .slice(0, 10)}.pdf`;
       doc.save(fileName);
@@ -429,100 +418,10 @@ export const TablePelaporan = ({ data, onFetchData }) => {
     }
   };
 
-  const menuLaporan = [
-    {
-      id: 1,
-      title: "Menu Informasi Umum",
-      path: "/dashboard/laporan/info-umum",
-    },
-    {
-      id: 2,
-      title: "Menu Inventarisasi",
-      path: "/dashboard/laporan/inventarisasi",
-    },
-    {
-      id: 3,
-      title: "Menu Digitalisasi",
-      path: "/dashboard/laporan/digitalisasi",
-    },
-    {
-      id: 4,
-      title: "Menu Penilaian Asset",
-      path: "/dashboard/laporan/penilaian-asset",
-    },
-    {
-      id: 5,
-      title: "Menu Pengelolaan",
-      path: "/dashboard/laporan/pengelolaan",
-    },
-    {
-      id: 6,
-      title: "Menu Pemanfaatan",
-      path: "/dashboard/laporan/pemanfaatan",
-    },
-    {
-      id: 7,
-      title: "Menu Kapasitas SDM",
-      path: "/dashboard/laporan/kapasitas-sdm",
-    },
-    {
-      id: 8,
-      title: "Menu Sistem IT",
-      path: "/dashboard/laporan/sistem-it",
-    },
-    {
-      id: 9,
-      title: "Menu Kepatuhan",
-      path: "/dashboard/laporan/kepatuhan",
-    },
-    {
-      id: 10,
-      title: "Menu Pelaporan",
-      path: "/dashboard/laporan/pelaporan",
-    },
-    {
-      id: 11,
-      title: "Menu Risiko",
-      path: "/dashboard/laporan/risiko",
-    },
-    {
-      id: 12,
-      title: "Menu Rangkuman",
-      path: "/dashboard/laporan/rangkuman",
-    },
-  ];
-
   return (
     <div className="w-full mb-10 bg-transparent max-w-full rounded-xl">
       <div className="flex flex-wrap-reverse flex-row-reverse md:flex-row justify-between items-center mt-10 gap-5">
-        <div className="w-full sm:w-auto">
-          <label
-            style={{ color: "var( --text-title)" }}
-            className="block text-md font-medium mb-2"
-          >
-            <span className="font-bold">Pilih Menu Laporan :</span>
-          </label>
-
-          <select
-            onChange={handleMenu}
-            className="search-input w-full pl-5 py-2 text-left md:text-left rounded-xl text-sm outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 hover:border-amber-400"
-            style={{
-              backgroundColor: "var(--bg-Table)",
-              border: "2px solid var(--sidebar-border)",
-            }}
-            defaultValue=""
-          >
-            <option value="" disabled hidden>
-              Pilih Menu Laporan
-            </option>
-
-            {menuLaporan.map((item) => (
-              <option key={item.id} value={item.path}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        </div>
+        <MenuReport />
         <div className="mt-6">
           <ModalCreate checkFetchData={handleFetchData} />
         </div>
@@ -992,13 +891,10 @@ export const TablePelaporan = ({ data, onFetchData }) => {
                 Tanggal
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Jumlah Asset Dimanfaatkan{" "}
+                Jumlah Laporan Untuk Publik{" "}
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-left text-xs font-bold  uppercase tracking-wider">
-                Jenis Pemanfaatan
-              </th>
-              <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
-                Persentase Pemanfaatan
+                Feedback{" "}
               </th>
               <th className="whitespace-nowrap px-6 py-3 text-center text-xs font-bold  uppercase tracking-wider">
                 Action
@@ -1055,19 +951,13 @@ export const TablePelaporan = ({ data, onFetchData }) => {
                   </td>
 
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
-                    {item.jumlahAssetDimanfaatkan || (
+                    {item.jumlahLaporanPublik || (
                       <span className="font-bold text-xl">-</span>
                     )}
                   </td>
 
                   <td className="px-6 py-4 text-left whitespace-nowrap text-sm">
-                    {item.jenisPemanfaatan || (
-                      <span className="font-bold text-xl">-</span>
-                    )}
-                  </td>
-
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
-                    {item.persentase || (
+                    {item.feedback || (
                       <span className="font-bold text-xl">-</span>
                     )}
                   </td>
